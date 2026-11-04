@@ -1,0 +1,812 @@
+<title>経理DX事業戦略レポート</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=BIZ+UDGothic:wght@400;700&family=Shippori+Mincho+B1:wght@600;800&display=swap">
+<style>
+/* Layout: 帳簿（元帳）の罫線をモチーフにした一段組のレポート。上に目次バー、各章は「科目見出し」＋本文。確認が必要な所に朱の「要確認」印。 */
+:root{
+  --bg:#f6f8f7; --paper:#ffffff; --ink:#18242b; --sub:#56656c; --rule:#d5dfdc; --rule-soft:#e7eeec;
+  --ledger:#1f6b5c; --ledger-soft:#e1efeb; --shu:#c23b22; --shu-soft:#fbe9e5; --amber:#a36a00; --amber-soft:#fbf1de;
+  --bar2:#7fb7a9; --bar3:#c9ddd7;
+  --f-display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --f-body:"BIZ UDPGothic","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --f-num:"BIZ UDGothic","Hiragino Sans","Yu Gothic",ui-monospace,monospace;
+  --s1:.75rem; --s2:.875rem; --s3:1rem; --s4:1.2rem; --s5:1.6rem; --s6:2.3rem;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101719; --paper:#162024; --ink:#e4ecea; --sub:#9db0ad; --rule:#2c3b3f; --rule-soft:#223034;
+  --ledger:#5fbfa8; --ledger-soft:#1b3330; --shu:#ff7a5e; --shu-soft:#3a1f1a; --amber:#e0a542; --amber-soft:#33291a;
+  --bar2:#3f8a79; --bar3:#2b4a44; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101719; --paper:#162024; --ink:#e4ecea; --sub:#9db0ad; --rule:#2c3b3f; --rule-soft:#223034;
+  --ledger:#5fbfa8; --ledger-soft:#1b3330; --shu:#ff7a5e; --shu-soft:#3a1f1a; --amber:#e0a542; --amber-soft:#33291a;
+  --bar2:#3f8a79; --bar3:#2b4a44; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:var(--s3);line-height:1.8;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+a{color:var(--ledger)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--ledger);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+
+/* 目次バー */
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule)}
+nav.toc .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
+nav.toc a{flex:none;text-decoration:none;color:var(--sub);font-size:var(--s2);padding:4px 10px;border-radius:4px;white-space:nowrap}
+nav.toc a:hover{background:var(--ledger-soft);color:var(--ledger)}
+
+/* 表紙 */
+header.cover{background:var(--paper);border-bottom:1px solid var(--rule)}
+header.cover .wrap{padding-block:48px 40px;display:grid;gap:24px}
+.eyebrow{font-size:var(--s1);letter-spacing:.12em;color:var(--sub)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(1.9rem,5.2vw,3rem);line-height:1.3;margin:0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--ledger);border-bottom:3px solid var(--ledger)}
+.lead{font-size:var(--s4);max-width:44em;margin:0;line-height:1.9}
+.meta{font-size:var(--s2);color:var(--sub)}
+
+/* 数字タイル */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--rule);border-radius:6px;background:var(--paper);overflow:hidden}
+.tile{padding:16px 18px;border-right:1px solid var(--rule-soft);min-width:0}
+.tile:last-child{border-right:0}
+.tile .v{font-family:var(--f-num);font-weight:700;font-size:var(--s6);line-height:1.2;color:var(--ledger)}
+.tile .v small{font-size:var(--s3);margin-left:2px}
+.tile .k{font-size:var(--s2);color:var(--sub);line-height:1.6;margin-top:6px}
+@media (max-width:760px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.tile:nth-child(2){border-right:0}.tile:nth-child(-n+2){border-bottom:1px solid var(--rule-soft)}}
+
+/* 章 */
+main section{padding-block:56px 8px}
+.sec-head{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:24px}
+.sec-no{font-family:var(--f-display);font-weight:800;font-size:var(--s6);color:var(--ledger);line-height:1}
+h2{font-family:var(--f-display);font-weight:800;font-size:var(--s5);margin:0;line-height:1.4;text-wrap:balance}
+.sec-head p{grid-column:2;margin:0;color:var(--sub);font-size:var(--s2)}
+h3{font-size:var(--s4);margin:32px 0 12px;line-height:1.5;text-wrap:balance}
+h4{font-size:var(--s3);margin:0 0 6px}
+p{margin:0 0 12px;max-width:46em}
+.note{font-size:var(--s2);color:var(--sub)}
+
+/* 印・バッジ */
+.stamp{display:inline-block;font-size:var(--s1);font-weight:700;color:var(--shu);border:1.5px solid var(--shu);border-radius:3px;padding:0 6px;line-height:1.6;letter-spacing:.05em;vertical-align:2px;white-space:nowrap}
+.tag{display:inline-block;font-size:var(--s1);padding:0 7px;border-radius:3px;line-height:1.7;white-space:nowrap;vertical-align:1px}
+.tag.fact{background:var(--ledger-soft);color:var(--ledger)}
+.tag.inf{background:var(--amber-soft);color:var(--amber)}
+.tag.lv-h{background:var(--shu-soft);color:var(--shu);font-weight:700}
+.tag.lv-m{background:var(--amber-soft);color:var(--amber);font-weight:700}
+
+/* 結論ボックス */
+.verdict{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:24px}
+.verdict ol{margin:0;padding-left:1.4em;display:grid;gap:14px}
+.verdict li::marker{font-family:var(--f-num);font-weight:700;color:var(--ledger)}
+.verdict b{color:var(--ink)}
+.prereq{margin-top:20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.prereq div{border:1.5px dashed var(--shu);border-radius:6px;padding:14px 16px;background:var(--shu-soft);min-width:0}
+.prereq h4{color:var(--shu)}
+.prereq p{font-size:var(--s2);margin:0}
+@media (max-width:760px){.prereq{grid-template-columns:1fr}}
+
+/* 分析カード（A〜H） */
+.ledger{display:grid;gap:0;border-top:1px solid var(--rule)}
+.row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.row .acct{font-weight:700;color:var(--ledger);font-size:var(--s2)}
+.row .acct span{display:block;font-family:var(--f-display);font-size:var(--s5);line-height:1.1;color:var(--ink)}
+.row .body{min-width:0}
+.row .body h4{font-size:var(--s4);margin-bottom:8px;text-wrap:balance}
+.row ul{margin:0 0 8px;padding-left:1.2em}
+.row li{margin-bottom:4px}
+@media (max-width:640px){.row{grid-template-columns:1fr;gap:6px}}
+
+/* 横棒チャート */
+.chart{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:18px 20px;margin:16px 0}
+.chart h4{margin-bottom:4px}
+.bars{display:grid;gap:10px;margin-top:14px}
+.bar{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr) 120px;gap:12px;align-items:center;font-size:var(--s2)}
+.bar .lbl{min-width:0}
+.bar .track{height:16px;background:var(--rule-soft);border-radius:2px;position:relative;overflow:hidden}
+.bar .fill{height:100%;background:var(--bar2);border-radius:2px}
+.bar.hi .fill{background:var(--ledger)}
+.bar.lo .fill{background:var(--bar3)}
+.bar .val{font-family:var(--f-num);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.bar .val small{color:var(--sub)}
+.axis3{position:absolute;top:0;bottom:0;width:0;border-left:1.5px dashed var(--shu)}
+@media (max-width:640px){.bar{grid-template-columns:1fr 92px}.bar .lbl{grid-column:1/-1}}
+
+/* 表 */
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--paper);margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:var(--s2);line-height:1.7}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--rule-soft)}
+th{background:var(--ledger-soft);color:var(--ledger);font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right;font-family:var(--f-num);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.total td{font-weight:700;border-top:2px solid var(--ink)}
+
+/* 悩みカード */
+.pains{display:grid;gap:14px}
+.pain{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:18px 20px;display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:20px}
+.pain.top{border:1.5px solid var(--shu)}
+.pain .main{min-width:0}
+.pain h4{font-size:var(--s4);line-height:1.5}
+.pain h4 .idx{font-family:var(--f-num);color:var(--ledger);margin-right:8px}
+.pain blockquote{margin:10px 0 0;padding:0 0 0 14px;border-left:3px solid var(--rule);font-size:var(--s2);color:var(--ink)}
+.pain blockquote p{margin:0 0 6px}
+.pain blockquote a{font-size:var(--s1);margin-left:4px}
+.pain .side{font-size:var(--s2);display:grid;gap:8px;align-content:start;min-width:0}
+.mini{height:8px;background:var(--rule-soft);border-radius:2px;overflow:hidden}
+.mini i{display:block;height:100%;background:var(--ledger)}
+.pain .judge{color:var(--sub)}
+@media (max-width:760px){.pain{grid-template-columns:1fr}}
+.insight{background:var(--ledger-soft);border-radius:6px;padding:18px 20px;margin-top:18px}
+.insight p:last-child{margin-bottom:0}
+
+/* ペルソナ */
+.personas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.persona{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:20px;min-width:0;display:grid;gap:10px;align-content:start}
+.persona.p1{grid-column:1/-1;border:1.5px solid var(--ledger)}
+.persona .pid{font-family:var(--f-num);font-size:var(--s2);font-weight:700;color:var(--ledger)}
+.persona .who{font-size:var(--s2);color:var(--sub);margin:0}
+.persona .concept{font-family:var(--f-display);font-weight:800;font-size:var(--s5);line-height:1.45;margin:0;text-wrap:balance}
+.persona.p1 .concept{font-size:clamp(1.4rem,3.4vw,1.9rem)}
+.persona dl{margin:0;display:grid;grid-template-columns:5.5em minmax(0,1fr);gap:6px 12px;font-size:var(--s2)}
+.persona dt{color:var(--sub);font-weight:700}
+.persona dd{margin:0}
+@media (max-width:760px){.personas{grid-template-columns:1fr}}
+
+/* 方針リスト */
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:8px}
+.rules div{border-left:3px solid var(--ledger);padding:4px 0 4px 14px;min-width:0}
+.rules p{font-size:var(--s2);margin:0}
+@media (max-width:640px){.rules{grid-template-columns:1fr}}
+
+/* タイトル案 */
+.titles{counter-reset:t;display:grid;gap:0;border-top:1px solid var(--rule)}
+.title-row{display:grid;grid-template-columns:2.4em minmax(0,1fr) auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule-soft);align-items:baseline}
+.title-row .n{font-family:var(--f-num);color:var(--sub);font-weight:700}
+.title-row .t{font-weight:700;min-width:0}
+.title-row .why{display:block;font-weight:400;font-size:var(--s2);color:var(--sub);margin-top:2px}
+.title-row .who{font-size:var(--s1);white-space:nowrap}
+.title-row.first .n{color:var(--shu)}
+@media (max-width:640px){.title-row{grid-template-columns:2em minmax(0,1fr)}.title-row .who{grid-column:2}}
+
+/* 商品の階段 */
+.ladder{display:grid;gap:8px}
+.step{display:grid;grid-template-columns:110px minmax(0,1fr) 150px;gap:16px;align-items:start;background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:14px 18px}
+.step .lv{font-weight:700;color:var(--ledger);font-size:var(--s2)}
+.step .lv span{display:block;font-family:var(--f-num);font-size:var(--s1);color:var(--sub);font-weight:400}
+.step .what{min-width:0}
+.step .what b{display:block}
+.step .what p{font-size:var(--s2);margin:2px 0 0;color:var(--sub)}
+.step .price{font-family:var(--f-num);font-weight:700;text-align:right;font-size:var(--s2)}
+.step .guard{grid-column:2/-1;font-size:var(--s1);color:var(--shu);margin-top:-6px}
+@media (max-width:640px){.step{grid-template-columns:1fr}.step .price{text-align:left}.step .guard{grid-column:1}}
+
+/* 収益の積み上げ */
+.plans{display:grid;gap:18px}
+.plan{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:18px 20px}
+.plan-head{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;justify-content:space-between}
+.plan-head h4{font-size:var(--s4);margin:0}
+.plan-head .sum{font-family:var(--f-num);font-weight:700;font-size:var(--s5);color:var(--ledger)}
+.plan-head .sum small{font-size:var(--s2);color:var(--sub);font-weight:400}
+.stack{position:relative;display:flex;height:28px;margin:14px 0 6px;background:var(--rule-soft);border-radius:3px;overflow:hidden}
+.stack i{display:block;height:100%}
+.stack i:nth-child(1){background:var(--ledger)}
+.stack i:nth-child(2){background:var(--bar2)}
+.stack i:nth-child(3){background:var(--bar3)}
+.goal{position:absolute;top:-4px;bottom:-4px;border-left:2px solid var(--shu)}
+.scale{position:relative;height:18px;font-size:var(--s1);color:var(--sub);font-family:var(--f-num)}
+.scale span{position:absolute;transform:translateX(-50%)}
+.scale span.g{color:var(--shu);font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:var(--s2);margin-top:6px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:2px}
+.plan .cond{font-size:var(--s2);color:var(--sub);margin:8px 0 0}
+
+/* シナリオ */
+.scen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.sc{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:16px 18px;min-width:0;display:grid;gap:6px;align-content:start}
+.sc.base{border:1.5px solid var(--ledger)}
+.sc h4{margin:0}
+.sc .big{font-family:var(--f-num);font-weight:700;font-size:var(--s5);line-height:1.3}
+.sc p{font-size:var(--s2);margin:0}
+.sc .when{font-weight:700;color:var(--ledger)}
+.sc.cons .when{color:var(--amber)}
+@media (max-width:760px){.scen{grid-template-columns:1fr}}
+
+/* ロードマップ */
+.road{display:grid;gap:0;border-left:2px solid var(--ledger);margin-left:8px}
+.phase{position:relative;padding:0 0 24px 24px}
+.phase::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--ledger)}
+.phase .when{font-family:var(--f-num);font-weight:700;color:var(--ledger);font-size:var(--s2)}
+.phase h4{font-size:var(--s4);margin:2px 0 8px}
+.phase .cols{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:16px}
+.phase ul{margin:0;padding-left:1.2em;font-size:var(--s2)}
+.phase li{margin-bottom:3px}
+.kpi{background:var(--ledger-soft);border-radius:6px;padding:12px 14px;font-size:var(--s2);min-width:0}
+.kpi b{display:block;color:var(--ledger);margin-bottom:4px}
+@media (max-width:760px){.phase .cols{grid-template-columns:1fr}}
+
+/* ガードレール */
+.guards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.guards div{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;min-width:0}
+.guards h4{color:var(--shu);font-size:var(--s2)}
+.guards p{font-size:var(--s2);margin:0}
+@media (max-width:760px){.guards{grid-template-columns:1fr}}
+
+/* 確認リスト */
+.checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.checks > div{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:16px 18px;min-width:0}
+.checks ol{margin:0;padding-left:1.3em;font-size:var(--s2)}
+.checks li{margin-bottom:6px}
+@media (max-width:860px){.checks{grid-template-columns:1fr}}
+
+details{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:0 18px;margin:12px 0}
+details summary{cursor:pointer;padding:14px 0;font-weight:700}
+details[open] summary{border-bottom:1px solid var(--rule-soft);margin-bottom:12px}
+details > div{padding-bottom:16px;font-size:var(--s2)}
+details ul{padding-left:1.2em;margin:0 0 10px}
+
+footer{padding-block:48px 64px;color:var(--sub);font-size:var(--s2)}
+.closing{font-family:var(--f-display);font-weight:800;font-size:var(--s5);line-height:1.6;color:var(--ink);max-width:30em;margin-bottom:16px;text-wrap:balance}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+</style>
+
+<header class="cover">
+  <div class="wrap">
+    <div class="eyebrow">経理DX・AI・業務効率化 事業戦略リサーチ ／ 最終報告</div>
+    <h1>経理×AIは<br><em>「ひとりでも確かめられる」</em>を売る</h1>
+    <p class="lead">売るべきなのは「時短」ではありません。<b>AIに任せる所と、人が確かめる所を決められる経理</b>です。主な客は、中小企業でひとり、または少人数で経理をしていて、AIに興味はあるのにまだ使っていない人です。</p>
+    <div class="tiles" role="list">
+      <div class="tile" role="listitem"><div class="v">60.2<small>%</small></div><div class="k">経理の会社員2,112人のうち、対話型AIを業務で使っていない人（Sansan 2026）</div></div>
+      <div class="tile" role="listitem"><div class="v">144<small>件</small></div><div class="k">集めた経理の生の声。強い感情は「ひとりで抱える」に集中</div></div>
+      <div class="tile" role="listitem"><div class="v">845<small>回</small></div><div class="k">「経理×AI」長尺の再生中央値。一方、ソフト名×AIの実演は10〜120倍の当たり</div></div>
+      <div class="tile" role="listitem"><div class="v">30.9<small>万円</small></div><div class="k">案Aの月の手取り試算。基本シナリオで12〜18か月目に到達</div></div>
+    </div>
+    <div class="meta">作成 2026年11月4日 ／ 7つの調査担当＋報告書担当＋チェック担当（約60か所を照合）／ タクマさんへ</div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="目次">
+  <div class="wrap">
+    <a href="#summary">結論</a><a href="#analysis">① 分析</a><a href="#pains">② 悩み</a><a href="#concept">③ コンセプト</a><a href="#content">④ コンテンツ</a><a href="#strategy">⑤ 月30万円戦略</a><a href="#next">要確認・次の一手</a><a href="#limits">限界・チェック記録</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- 結論 -->
+<section id="summary">
+  <div class="sec-head"><div class="sec-no">結</div><h2>結論と、その根拠</h2><p>最初に読むページ。細かい数字と出典は各章にあります。</p></div>
+  <div class="verdict">
+    <ol>
+      <li><b>市場はまだ使い始めの段階。</b>経理の会社員の60.2%がAIを使っておらず、35.5%は「興味はあるが使ったことがない」。使わない理由は正確性への不安（38.8%）とセキュリティ（35.7%）です。<span class="tag fact">事実</span></li>
+      <li><b>悩みの中心は「ひとりで判断し、ミスの責任を全部負う」こと。</b>欲しいのは時短より、判断の根拠と「ひとりじゃない」感覚です。<span class="tag fact">事実</span>＋<span class="tag inf">推論</span></li>
+      <li><b>YouTubeには答えが足りない場所が2つある。</b>セキュリティと社内ルール、そしてAIが間違えたときの確かめ方です。「経理×AI」と名乗るだけの動画は伸びず、会計ソフト名×最新AIの実演は小さいチャンネルでも当たっています。<span class="tag fact">事実</span></li>
+      <li><b>タクマさんの経歴がこの空白に合う。</b>市役所の税務・会計事務所・今の経理の会社と、税・会計の職場を3つ経験した非エンジニアが、複雑なことを整理して1対1で伝える。この立ち位置を名乗れます。<span class="tag inf">推論</span></li>
+      <li><b>月30万円は個人向け商品の組み合わせで目指す。</b>メンバーシップ・テンプレート・講座・1対1相談です。法人研修は就業規則を確認してから足します。再生が中央値のままなら12か月目は月10〜20万円なので、6か月目に見直します。<span class="tag inf">試算</span></li>
+    </ol>
+    <div class="prereq">
+      <div><h4>始める前に ①</h4><p><b>勤務先の就業規則と事業内容。</b>本業が経理の会社なので、代行・コンサルだけでなく、テンプレート販売も競業とみなされるおそれがあります。</p></div>
+      <div><h4>始める前に ②</h4><p><b>簿記などの資格と、今の職種。</b>「現役経理」と名乗れるか、プロフィールをどう書くかがこれで決まります。</p></div>
+      <div><h4>始める前に ③</h4><p><b>個別の税務相談には答えない運用。</b>税理士法52条は無料でも対象です。コメントやDMの返信も含みます。</p></div>
+    </div>
+    <p class="note" style="margin-top:14px">この3点が決まるまでは、無料の教育コンテンツ（架空の会社を使った実演、考え方の整理、無料の棚卸しシート）だけで始めるのが安全です。</p>
+  </div>
+</section>
+
+<!-- ① 分析 -->
+<section id="analysis">
+  <div class="sec-head"><div class="sec-no">①</div><h2>リサーチから読み取れること</h2><p>A〜Hの8領域。<span class="tag fact">事実</span>は出典あり、<span class="tag inf">推論</span>はそこから考えたこと。</p></div>
+
+  <div class="ledger">
+    <div class="row"><div class="acct">A<span>市場</span></div><div class="body">
+      <h4>最大の層は「AIに興味はあるが未使用」</h4>
+      <ul>
+        <li>会計事務の仕事をしている人は約152万人、平均44歳、平均年収512.2万円（job tag。2010年国勢調査と同じ値で古い可能性）。</li>
+        <li>ハローワークの有効求人倍率は0.55倍。一方、経験者の求人倍率は1倍超（MS-Japan、2023年）。未経験には狭く、経験者・DX人材は足りない二重構造。</li>
+        <li>中小企業の58.2%は経理担当が1人（中小企業庁、2014年度で古い）。</li>
+        <li>スキルアップ費用は「自分で負担」が37.0%で最多。相談相手は顧問税理士・会計士が56.4%（MJS）。</li>
+      </ul>
+      <p class="note"><span class="tag inf">推論</span> 個人向けは数千〜数万円の自己投資で成り立つ。法人の導入は経営者が決め、顧問税理士の影響も強い。</p>
+    </div></div>
+
+    <div class="row"><div class="acct">B<span>悩み</span></div><div class="body">
+      <h4>件数1位は「DXの壁」、強さ1位は「ひとりで抱える」</h4>
+      <ul>
+        <li>知恵袋91・X30・BOXIL14・OpenWork6などから144件。件数の上位は DXの壁23件、キャリア・簿記の価値20件、ひとり経理16件。</li>
+        <li>強度の平均が高いのは「能力不安・メンタル」2.50と「ひとり経理」2.19。DXの壁は1.52で、強い痛みではなく慢性的な不満。</li>
+        <li>「あの人しかできない」業務がある企業87.8%、仕訳の判断マニュアルが不十分73.7%。<span class="stamp">※要約</span></li>
+      </ul>
+    </div></div>
+
+    <div class="row"><div class="acct">C<span>発信</span></div><div class="body">
+      <h4>「経理×AI」というラベルだけでは伸びない</h4>
+      <div class="chart" aria-label="テーマ別の伸び率中央値">
+        <h4>テーマ別の伸び率（中央値）</h4>
+        <p class="note" style="margin:0">伸び率＝その動画の再生数÷チャンネルの最近30本の中央値。赤い点線が当たりの目安「3倍」。YouTube Data API、長尺177本。</p>
+        <div class="bars">
+          <div class="bar hi"><div class="lbl">経理の将来性・なくなる <small class="note">（3本・参考）</small></div><div class="track"><div class="fill" style="width:85.8%"></div><div class="axis3" style="left:60%"></div></div><div class="val">4.29倍 <small>78,916回</small></div></div>
+          <div class="bar hi"><div class="lbl">汎用AI×Excel・Copilot</div><div class="track"><div class="fill" style="width:65%"></div><div class="axis3" style="left:60%"></div></div><div class="val">3.25倍 <small>88,014回</small></div></div>
+          <div class="bar"><div class="lbl">経理転職・キャリア・資格</div><div class="track"><div class="fill" style="width:37.2%"></div><div class="axis3" style="left:60%"></div></div><div class="val">1.86倍 <small>10,130回</small></div></div>
+          <div class="bar"><div class="lbl">Excel・PC時短（AIなし） <small class="note">（10本）</small></div><div class="track"><div class="fill" style="width:34.6%"></div><div class="axis3" style="left:60%"></div></div><div class="val">1.73倍 <small>446回</small></div></div>
+          <div class="bar"><div class="lbl">経理×AI実務（70本）</div><div class="track"><div class="fill" style="width:28.6%"></div><div class="axis3" style="left:60%"></div></div><div class="val">1.43倍 <small>845回</small></div></div>
+          <div class="bar lo"><div class="lbl">経理DXの一般論（当たり0本）</div><div class="track"><div class="fill" style="width:25.2%"></div><div class="axis3" style="left:60%"></div></div><div class="val">1.26倍 <small>430回</small></div></div>
+        </div>
+      </div>
+      <ul>
+        <li><b>当たりは3種類だけ。</b>①汎用AI×Excelの網羅（「Copilot活用法10選」703,451回・82.87倍）②会計ソフト名×最新AIの実演（NEXTバックオフィス研究所 24.47倍、登録者34人のチャンネルで122倍）③将来不安を正面から扱う回（ミライ経理 約6.9万回）。</li>
+        <li><b>投稿は急増中。</b>経理×AIのタイトルは2025年12月の月5本から、2026年9月は月17本に。新モデルの速報はもう混んでいる。</li>
+        <li><b>席は空いている。</b>経理×AIの実務を出し続けて登録者1万人を超える経理チャンネルは見つからなかった。</li>
+        <li><b>コメント欄の声：</b>社内データをAIに入れてよいか（いいね22）／例外処理・科目判断・紙と電子の二重運用で「うちでは使えない」／ひとり経理の負担と不正リスク（いいね40）／経理はなくなるのか。</li>
+      </ul>
+      <p class="note"><span class="tag inf">推論</span> 勝ち筋は「現場の目線×具体的な会計ソフト×AI×人が確かめる場所とセキュリティ設定まで見せる」実務シリーズ。</p>
+    </div></div>
+
+    <div class="row"><div class="acct">D<span>中身</span></div><div class="body">
+      <h4>2026年のAIは「自動でやる」より「チェック・レビュー」</h4>
+      <ul>
+        <li>freeeは2026年8月28日に税理士事務所向けAIエージェント4種を公開、9月15日から有償。マネーフォワードは8月7日に「連結決算レビューエージェント」。TOKIUMはエージェント9体。</li>
+        <li>生成AIは会議費と接待交際費のような似た科目を取り違え、税区分にも検証が要る。AI利用規程がない企業は57.5%。<span class="stamp">※要約</span></li>
+      </ul>
+      <p class="note"><span class="tag inf">推論</span> AIがソフトに組み込まれるほど、プロンプトの書き方の価値は下がる。上がるのは「出力を検証する手順」「入れてよいデータの線引き」「どの業務から任せるかの設計」。講座で教えられるのは棚卸し・自動仕訳ルール・安全な使い方・Excel。SaaS連携や決算早期化は伴走の領域。</p>
+    </div></div>
+
+    <div class="row"><div class="acct">E<span>競合・収益</span></div><div class="body">
+      <h4>法人研修は1人40万円の先行例。個人で成功を公表している例はほぼない</h4>
+      <div class="tbl"><table>
+        <thead><tr><th>区分</th><th>相場</th></tr></thead>
+        <tbody>
+          <tr><td>法人の経理×ChatGPT研修</td><td>12時間・1人税抜40万円（10人以上36万円）</td></tr>
+          <tr><td>経理実務の講座</td><td>税込33,000円（2023年）</td></tr>
+          <tr><td>学び放題</td><td>月980円（Schoo）</td></tr>
+          <tr><td>記帳代行</td><td>月100仕訳で月1万円前後</td></tr>
+          <tr><td>キャリアコーチング</td><td>20〜70万円</td></tr>
+          <tr><td>YouTube広告</td><td>RPM 約500円／1,000再生 → 月30万円に月60万再生が必要</td></tr>
+          <tr><td>note手数料</td><td>カード決済5%＋利用料10% → 手元に85.5%</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note"><span class="tag inf">推論</span> 記帳代行は単価が低く価格競争になりやすいうえ、勤務先と競合するおそれが高い。主力にしない。</p>
+    </div></div>
+
+    <div class="row"><div class="acct">F<span>トレンド</span></div><div class="body">
+      <h4>2026年秋から2028年まで、制度改正の山が続く</h4>
+      <div class="tbl"><table>
+        <thead><tr><th>時期</th><th>出来事</th></tr></thead>
+        <tbody>
+          <tr><td class="num">2026年10月1日</td><td>インボイス経過措置で、免税事業者等からの仕入れの控除が80%→70%</td></tr>
+          <tr><td class="num">2026年12月</td><td>基礎控除の拡充後、初めての年末調整 <span class="stamp">要確認</span></td></tr>
+          <tr><td class="num">2027年度初め</td><td>電子交換所での手形・小切手の交換を廃止</td></tr>
+          <tr><td class="num">2027年4月〜</td><td>新リース会計基準の適用（4月1日以後に開始する年度）</td></tr>
+          <tr><td class="num">2028年2〜3月</td><td>3割特例を初めて使う申告（個人事業者）</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">生成AIの活用方針がある日本企業は49.7%（情報通信白書）。<span class="tag inf">推論</span> 教材は「原理」と「時事」に分け、時事には「○年○月時点」を必ず付ける。</p>
+    </div></div>
+
+    <div class="row"><div class="acct">G<span>立ち位置</span></div><div class="body">
+      <h4>「税・会計の現場を3つ回った非エンジニアが、整理して1対1で伝える」</h4>
+      <ul>
+        <li><b>主軸：</b>非エンジニアの中小企業経理向けAI実務。<b>2本目：</b>AI時代の経理キャリア。<b>シリーズ名：</b>「ひとり経理」（視聴者を指す言葉として）。</li>
+        <li><b>使わない言葉：</b>「元税務職員」「税務署目線」。国税の職員と誤解されるうえ、守秘義務がある。「元市役所の税務担当」と正確に書く。</li>
+        <li><b>チャンネル：</b>キャリアノートは「転職活動の前」に絞ったので、経理の実務は別チャンネルが筋（例：「経理ノート」）。キャリアノートとは単発の回でゆるくつなぐ。</li>
+      </ul>
+    </div></div>
+
+    <div class="row"><div class="acct">H<span>リスク</span></div><div class="body">
+      <h4>一番重いのは「本業との競業」と「個別の税務相談」</h4>
+      <ul>
+        <li>税理士法52条：「他人の求めに応じ」た税務相談は有償・無償を問わず禁止。2年以下の拘禁刑または100万円以下の罰金。</li>
+        <li>副業：会社が制限できるのは秘密の漏えいや競業などの場合。本業が経理の会社なので、代行・コンサル・社長向け有料相談は重なりやすい。</li>
+        <li>ステマ規制：2023年10月から景品表示法の不当表示。アフィリエイトには「PR」表示。</li>
+      </ul>
+    </div></div>
+  </div>
+
+  <details>
+    <summary>担当どうしで食い違った点と、その扱い</summary>
+    <div>
+      <ul>
+        <li><b>マネーフォワード「AI Cowork」：</b>発表済みとして採用。10月2日に士業向けの先行提供が始まったという記事はあるが、一般提供の公式リリースは見つからず <span class="stamp">要確認</span>。動画で扱う前に公式ページで確認。</li>
+        <li><b>ひとり経理58.2%：</b>平成26年度調査（2015年公表、804社）を採用。約10年前の値。</li>
+        <li><b>経理のAI導入率：</b>個人の利用（約4割、使っていない人6割）と会社のシステム導入（2〜3割）は指標が違うだけで、矛盾ではない。</li>
+        <li><b>経理の平均年収：</b>512〜592万円と調査で違うため、幅として扱う。</li>
+        <li><b>マネーフォワードの料金：</b>資料で数字が違うので公式ページで要確認。</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- ② 悩み -->
+<section id="pains">
+  <div class="sec-head"><div class="sec-no">②</div><h2>強い悩み・解決したい悩み</h2><p>144件を7つのカテゴリーに整理。強度は 1＝質問、2＝不満、3＝強い感情語や体の症状。「解決したい度」は推論。</p></div>
+
+  <div class="pains">
+    <article class="pain top">
+      <div class="main">
+        <h4><span class="idx">1</span>ひとりで抱える・確認相手がいない</h4>
+        <blockquote>
+          <p>「経理がしんどいです。いっぱいいっぱいで仕事のことが頭から離れなくて寝れません」<a href="https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q12328005992" target="_blank" rel="noopener">知恵袋</a></p>
+          <p>「経理未経験、引き継ぎなし、前任者は死亡」<a href="https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q14268005109" target="_blank" rel="noopener">知恵袋</a></p>
+          <p>「一人経理で相談できる人もいない。だから全部、自分で調べた。」<a href="https://x.com/okei0417" target="_blank" rel="noopener">X</a></p>
+        </blockquote>
+      </div>
+      <div class="side">
+        <div><span class="num">37件</span>・強度3が14件<div class="mini"><i style="width:80%"></i></div></div>
+        <div><span class="tag lv-h">解決したい度：最も高い</span></div>
+        <div class="judge">欲しいのは時短より「これで合っているかの根拠」と「ひとりじゃない感覚」。メンタルの症状そのものは扱わず、医療・相談窓口へ案内する。</div>
+      </div>
+    </article>
+
+    <article class="pain top">
+      <div class="main">
+        <h4><span class="idx">2</span>AIを使いたいが、信用と安全の線引きがない</h4>
+        <blockquote>
+          <p>「ChatGPTってたまに堂々とウソつくから信用できないです…」<a href="https://x.com/happyyoshigi/status/2000672334231773496" target="_blank" rel="noopener">X</a></p>
+          <p>「社内でchatgptの使用が禁止されてしまいました」<a href="https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q12279789787" target="_blank" rel="noopener">知恵袋</a></p>
+          <p>「セキュリティ面（業務内容をCopilotに入れても問題ないのか） についても問題ないのか気になるところですね」いいね22 <a href="https://www.youtube.com/watch?v=NmSUp4Gezc8&amp;lc=UgwdfSKuVMYu_u1oVgZ4AaABAg" target="_blank" rel="noopener">コメント</a></p>
+        </blockquote>
+      </div>
+      <div class="side">
+        <div><span class="num">8件＋コメント多数</span>・強度3は0件<div class="mini"><i style="width:17%"></i></div></div>
+        <div><span class="tag lv-h">解決したい度：高い</span></div>
+        <div class="judge">感情は強くないが、答えがほとんどない。障壁の1位・2位（正確性・セキュリティ）と一致。最初の商品にしやすい入口。ただし経理本人と特定できる声は0件で、根拠は調査とコメントが中心。</div>
+      </div>
+    </article>
+
+    <article class="pain">
+      <div class="main">
+        <h4><span class="idx">3</span>手作業・紙・ツールが定着しない</h4>
+        <blockquote>
+          <p>「号令は出る。でも、具体的に何をどう変えるかは現場に丸投げされる」<a href="https://x.com/kandmybike/status/2041093070113182185" target="_blank" rel="noopener">X</a></p>
+          <p>「何年使ってもワークフローで差し戻されることが無くならない」<a href="https://boxil.jp/service/1066/reviews/38565/" target="_blank" rel="noopener">BOXIL</a></p>
+        </blockquote>
+      </div>
+      <div class="side">
+        <div><span class="num">46件</span>・強度3は0件<div class="mini"><i style="width:100%"></i></div></div>
+        <div><span class="tag lv-m">解決したい度：中〜高</span></div>
+        <div class="judge">件数は最多だが、諦めに近い慢性的な不満。個人より会社の予算で解決されやすい。法人・社長向けの入口。</div>
+      </div>
+    </article>
+
+    <article class="pain">
+      <div class="main">
+        <h4><span class="idx">4</span>AIでなくなる？これからのキャリア</h4>
+        <blockquote>
+          <p>「経理はAIによって無くなるんですか？」<a href="https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q14314242769" target="_blank" rel="noopener">知恵袋</a></p>
+          <p>「25歳高卒未経験簿記2級持ち 140社応募して内定ゼロです」いいね44 <a href="https://www.youtube.com/watch?v=ClWekKbS77Y&amp;lc=UgzD-RTiIvq9J3x3ZW14AaABAg" target="_blank" rel="noopener">コメント</a></p>
+        </blockquote>
+      </div>
+      <div class="side">
+        <div><span class="num">31件</span>・強度3が2件<div class="mini"><i style="width:67%"></i></div></div>
+        <div><span class="tag lv-m">解決したい度：中〜高</span></div>
+        <div class="judge">動画は伸びやすく入口として強い。ただ未経験の転職層は払う力が弱く、転職エージェント型の発信者と競合する。</div>
+      </div>
+    </article>
+
+    <article class="pain">
+      <div class="main">
+        <h4><span class="idx">5</span>制度対応の「自社の場合はどうするか」</h4>
+        <blockquote>
+          <p>「皆さん本当に、電子帳簿保存法に対応できるの？作業膨大にならない？」<a href="https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q13277635423" target="_blank" rel="noopener">知恵袋</a></p>
+          <p>「簿記じゃ出ないんです泣」<a href="https://x.com/johntanaka/status/1952928113161036120" target="_blank" rel="noopener">X</a></p>
+        </blockquote>
+      </div>
+      <div class="side">
+        <div><span class="num">32件</span>・強度3が4件<div class="mini"><i style="width:70%"></i></div></div>
+        <div><span class="tag lv-m">解決したい度：中（波あり）</span></div>
+        <div class="judge">制度が変わるたびに急増する。個別の判断は税理士法52条の範囲なので、売れるのは一般的な解説とチェック表まで。</div>
+      </div>
+    </article>
+
+    <article class="pain">
+      <div class="main">
+        <h4><span class="idx">6</span>残業・決算期に業務が集中する</h4>
+        <blockquote><p>「締日の関係で月末月初、半期決算、年度末なんかは残業の嵐になります」<a href="https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q1349395883" target="_blank" rel="noopener">知恵袋</a>（古い投稿）</p></blockquote>
+      </div>
+      <div class="side">
+        <div><span class="num">14件</span>・強度3が3件<div class="mini"><i style="width:30%"></i></div></div>
+        <div><span class="tag lv-m">解決したい度：中</span></div>
+        <div class="judge">残業は一年中ではなく決算期に集中。「月次の締めを何日早めるか」に言い換えると伝わる。</div>
+      </div>
+    </article>
+
+    <article class="pain">
+      <div class="main">
+        <h4><span class="idx">7</span>評価されない・報われない</h4>
+        <blockquote><p>「経理が決算を完璧に締めても「当たり前でしょ」で終わります」<a href="https://x.com/kaikeinochikara/status/2042558471951065268" target="_blank" rel="noopener">X</a></p></blockquote>
+      </div>
+      <div class="side">
+        <div><span class="num">11件</span>・強度3が2件<div class="mini"><i style="width:24%"></i></div></div>
+        <div><span class="tag lv-m">解決したい度：中</span></div>
+        <div class="judge">単独では商品になりにくい。「改善を数字で上司に伝える」テンプレートとして1・3とセットにする。</div>
+      </div>
+    </article>
+  </div>
+
+  <div class="insight">
+    <p><b>強い悩みと、お金を払ってでも解決したい悩みは一部ずれています。</b>一番強い感情は「ひとりで抱える」（1）ですが、必要なのは時間の短縮ではなく判断の根拠です。感情は弱いのに答えが空いているのが「AIの安全と信用」（2）です。</p>
+    <p>この2つは<b>「AIに任せる所と、自分で確かめる所を決める」</b>という1本の約束でつなげられます。AIを「もう1人の確認役」として安全に使う形です。これが③のコンセプトの軸になります。</p>
+    <p class="note">支払意思を直接書いた経理本人の声は見つかっていません。0〜3か月目の1対1ヒアリングで確かめます。</p>
+  </div>
+</section>
+
+<!-- ③ コンセプト -->
+<section id="concept">
+  <div class="sec-head"><div class="sec-no">③</div><h2>ターゲットごとのコンセプト</h2><p>優先順は、悩みの強さ・払ってもらえる見込み・競合の薄さ・本人との相性・法律上の安全性の5つで決めました。</p></div>
+
+  <div class="personas">
+    <article class="persona p1">
+      <div class="pid">P1　最優先</div>
+      <p class="who">中小企業のひとり経理・少人数経理で、AIに興味はあるが未使用の人。経理と総務を1〜2人で担当し、会社のAIルールはないか禁止に近い。</p>
+      <p class="concept">「ひとりでも、AIをもう1人の確認役にできる経理」</p>
+      <dl>
+        <dt>約束</dt><dd>毎月の作業を「AIに下書きさせる所」「自分で確かめる所」「AIに入れてはいけない情報」の3つに分けた1枚の表を、架空の会社で一緒に作る。効果を約束する表現（「必ず」「○時間削減」）は使わない。</dd>
+        <dt>勝てる理由</dt><dd>ベンダーは自社ツールへの誘導が目的で、ツールをまたいだ中立の確認手順は出さない。大手AIチャンネルは汎用で、社内データの扱いに不信感のコメントが出ている。税理士系は速報が中心で、セキュリティや費用の質問に答えていない。</dd>
+        <dt>根拠</dt><dd>悩み1（37件・強度3が14件）と悩み2（障壁の1位・2位）。ひとり経理58.2%（古い）。費用を自分で負担する人37.0%。</dd>
+      </dl>
+    </article>
+
+    <article class="persona">
+      <div class="pid">P2</div>
+      <p class="who">経理2〜3年目の若手と、AI時代の経理キャリアに迷う人。20代後半〜30代前半で、キャリアノートの視聴者と年齢が重なる。</p>
+      <p class="concept">「AIが来ても、経理を続けていい理由と、次に身につける力がわかる」</p>
+      <dl>
+        <dt>約束</dt><dd>自分の業務を「AIに置き換わる作業」「AIを使う人に残る仕事」「これから伸ばす力」に分けるワークで、次の半年に学ぶことを1つ決める。</dd>
+        <dt>勝てる理由</dt><dd>競合は転職エージェント型か、不安をあおる短い動画が中心。キャリアノートの自己分析の型を応用できる。</dd>
+        <dt>注意</dt><dd>求人の選び方や応募の手順は扱わない。「転職の前に自分の業務を棚卸しする」段階まで。</dd>
+      </dl>
+    </article>
+
+    <article class="persona">
+      <div class="pid">P3　6か月目以降・規定の確認後</div>
+      <p class="who">中小企業の社長・管理部長。「DXしろ」と号令は出せるが、中身を設計できる人が社内にいない（IT人材なし36.3%）。</p>
+      <p class="concept">「社長の『DXしろ』を、経理担当が実行できる3か月の計画に変える」</p>
+      <dl>
+        <dt>約束</dt><dd>社長と経理担当の2人で使う計画シート（棚卸し→任せる順番→社内のAIルール）と少人数の研修。</dd>
+        <dt>勝てる理由</dt><dd>先行例は1人40万円、ベンダーのセミナーは自社ツールが前提。中立の内容を少人数で、相場より低く出せる。</dd>
+        <dt>条件</dt><dd>勤務先と競合しないことを就業規則で確認するまで商品にしない。</dd>
+      </dl>
+    </article>
+
+    <article class="persona" style="grid-column:1/-1">
+      <div class="pid">P4　保留</div>
+      <p class="who">経理を目指す未経験者・簿記2級の学習者。悩みの声は多いが、求人倍率0.55倍で扱う内容が転職手順になりやすく、払う力も弱いと見込まれる。キャリアノートで「経理が自分に向いているかの確かめ方」を単発で扱い、経理チャンネルへの入口にする程度にとどめる。会計事務所の職員も候補だが、勤務先との関係を確認するまで保留。</p>
+    </article>
+  </div>
+</section>
+
+<!-- ④ コンテンツ -->
+<section id="content">
+  <div class="sec-head"><div class="sec-no">④</div><h2>今後提供するコンテンツ</h2><p>「求められる存在」になるための方針、媒体の役割、最初の15本。</p></div>
+
+  <div class="rules">
+    <div><h4>一般論は出さない</h4><p>毎回、具体的な会計ソフト名・業務名・時点を入れる。一般論の当たりは0本だった。</p></div>
+    <div><h4>毎回の決まりごとを持つ</h4><p>架空の会社「（例）株式会社サンプル商事」を毎回使い、「人が確かめる場所」と「AIに入れない情報」を必ず1枚で見せる。</p></div>
+    <div><h4>勝てるタイトルの型を使う</h4><p>「〜選」・数字・【対象】・ツール名×AI・結果を先に・年号。疑問形と「方法・やり方」は控える。45字前後。</p></div>
+    <div><h4>速報で勝負しない</h4><p>新モデルの速報の1〜2週間後に「中小の経理で使えるか、どこで間違えたか」をまとめる立ち位置を取る。</p></div>
+  </div>
+
+  <h3>媒体ごとの役割</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>媒体</th><th>役割</th><th>頻度</th><th>中身</th></tr></thead>
+    <tbody>
+      <tr><td><b>YouTube長尺</b>（新チャンネル）</td><td>信頼づくり・検索の入口</td><td>週1〜2本・15〜25分</td><td>今のスライド＋ナレーションに、必要な所だけ短い画面録画。実演は架空のデータだけ</td></tr>
+      <tr><td><b>ショート／リール</b></td><td>発見される入口</td><td>長尺1本につき5本</td><td>「AIに入れてはいけない経理データ3つ」など1本1テーマ</td></tr>
+      <tr><td><b>X</b></td><td>経理の人とつながる・需要確認</td><td>毎日1〜3投稿</td><td>あるある＋AIの小技、制度の日付のリマインド。個別の税務の質問には答えない（固定ポストで明示）</td></tr>
+      <tr><td><b>note</b></td><td>低価格商品・検索の入口</td><td>無料週1・有料月2</td><td>動画の手順版、指示文と確認表のセット、メンバーシップ</td></tr>
+      <tr><td><b>LINE</b></td><td>見込み客リスト・講座の案内</td><td>週1配信</td><td>登録特典：「経理×AI 安全チェックリスト」「業務棚卸しシート」</td></tr>
+      <tr><td><b>テンプレート</b></td><td>再現できる証拠＋低価格商品</td><td>月1〜2点</td><td>社内AI利用ルールの雛形、月次の確認表、仕訳チェックの指示文集、改善報告テンプレート</td></tr>
+      <tr><td><b>キャリアノート</b></td><td>ゆるくつなぐ</td><td>3〜4か月に1本</td><td>「数字に苦手意識がない人は経理を選択肢に入れていい？」など、土台づくりの範囲の単発回</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>最初の15本（タイトル案）</h3>
+  <p class="note">赤い番号は最初に出す4本。年末調整（11〜12月が山）で需要をつかみつつ、1・2・7でチャンネルの軸を作ります。</p>
+  <div class="titles">
+    <div class="title-row first"><span class="n">10</span><span class="t">【年末調整 2026】基礎控除の見直しで経理がミスしやすい7つの場所と、AIでの事前チェック<span class="why">季節需要。控除額は国税庁の手引きで確認してから入れる</span></span><span class="who tag fact">P1・悩み5</span></div>
+    <div class="title-row first"><span class="n">1</span><span class="t">【経理×AI】社内データを入れる前に決める5つのルール｜情報漏えいが不安なひとり経理へ<span class="why">セキュリティの空白に答える</span></span><span class="who tag fact">P1・悩み2</span></div>
+    <div class="title-row first"><span class="n">2</span><span class="t">【2026年版】経理がAIに任せていい作業・任せてはいけない作業10選｜月次チェック表つき<span class="why">チャンネルの看板になる回</span></span><span class="who tag fact">P1</span></div>
+    <div class="title-row first"><span class="n">7</span><span class="t">【ひとり経理】前任者が辞めて引き継ぎなし…最初の30日でやる業務棚卸し5ステップ<span class="why">「引き継ぎなし」の声。棚卸しシートをLINE特典に</span></span><span class="who tag fact">P1・悩み1</span></div>
+    <div class="title-row"><span class="n">3</span><span class="t">【実演】マネーフォワード×AIで月次仕訳を下書き→人が確かめる3つの場所（架空の会社）<span class="why">122倍の当たりの型に「確認」を足す</span></span><span class="who tag fact">P1</span></div>
+    <div class="title-row"><span class="n">4</span><span class="t">【freee×Claude】AIが間違えた仕訳5選｜会議費と交際費・税区分の取り違えを見抜く<span class="why">現場からの反論コメントに正面から答える</span></span><span class="who tag fact">P1</span></div>
+    <div class="title-row"><span class="n">5</span><span class="t">【職種別】ChatGPT・Gemini・Copilotを経理で使い分ける7つの場面【2026年版】<span class="why">【職種別】の型（646,137回）を経理に絞る</span></span><span class="who tag fact">P1・P2</span></div>
+    <div class="title-row"><span class="n">6</span><span class="t">【AI時代の経理】なくなる作業・残る仕事・これから伸ばす力5選｜経理2〜3年目向け<span class="why">不安テーマの入口</span></span><span class="who tag fact">P2・悩み4</span></div>
+    <div class="title-row"><span class="n">8</span><span class="t">【AI×Excel】経理の照合・突合を速くする関数とAIへの指示文10選（架空データで実演）<span class="why">汎用AI×Excelの当たりの型を経理に寄せる</span></span><span class="who tag fact">P1</span></div>
+    <div class="title-row"><span class="n">9</span><span class="t">【インボイス 2026年10月改正】控除70%で経理が見直す5つの場所｜取引先チェック表つき<span class="why">制度の波。一般的な解説の範囲（52条）</span></span><span class="who tag fact">P1・悩み5</span></div>
+    <div class="title-row"><span class="n">11</span><span class="t">【経費精算】差し戻しが減らない原因は申請する側｜社内に配るルール文をAIで作る<span class="why">差し戻しの声</span></span><span class="who tag fact">P1・悩み3</span></div>
+    <div class="title-row"><span class="n">12</span><span class="t">【経理×AIの費用】ChatGPT・Claudeの有料プランは中小の経理で元が取れるか｜月の仕訳数で試算<span class="why">費用対効果のコメントに答える。言い切りの案とも比べる</span></span><span class="who tag fact">P1・P3</span></div>
+    <div class="title-row"><span class="n">13</span><span class="t">【社長向け】「DXしろ」を経理が実行できる3か月の計画に変える3つの質問<span class="why">号令が丸投げされるという声</span></span><span class="who tag fact">P3</span></div>
+    <div class="title-row"><span class="n">14</span><span class="t">【経理の評価】「当たり前」で終わらせない｜月次の改善を上司に伝える報告テンプレート<span class="why">刺さる言葉をそのまま使う</span></span><span class="who tag fact">P1・P2・悩み7</span></div>
+    <div class="title-row"><span class="n">15</span><span class="t">【新リース会計基準 2027】契約書の洗い出しをAIで下書きする手順｜上場子会社の経理向け<span class="why">2027年4月の需要に前倒しで</span></span><span class="who tag fact">派生</span></div>
+  </div>
+  <p class="note" style="margin-top:12px">ショートの例：「AIに入れてはいけない経理データ3つ」「会議費と交際費、AIが間違えた例」「経費精算の差し戻しを減らす一文」「ひとり経理の月末にやる確認1つ」「経理2年目が今やっておく1つのこと」</p>
+</section>
+
+<!-- ⑤ 戦略 -->
+<section id="strategy">
+  <div class="sec-head"><div class="sec-no">⑤</div><h2>単月30万円以上の収益戦略</h2><p>商品の階段 → 3つの組み合わせ → シナリオ → ロードマップ。転換率はすべて仮定です。</p></div>
+
+  <h3>商品の階段</h3>
+  <div class="ladder">
+    <div class="step"><div class="lv">無料<span>集客</span></div><div class="what"><b>YouTube・ショート・X・無料note、LINE特典</b><p>安全チェックリスト・棚卸しシート</p></div><div class="price">0円</div><div class="guard">個別の税務の質問には答えない。「個別の判断は顧問税理士へ」を表示</div></div>
+    <div class="step"><div class="lv">低価格<span>最初の購入</span></div><div class="what"><b>有料note・テンプレートパック</b><p>架空の会社で作った手順書＋指示文＋確認表</p></div><div class="price">980〜2,980円</div><div class="guard">就業規則の確認後に販売。効果は「架空データでの結果」と明記</div></div>
+    <div class="step"><div class="lv">中価格①<span>ストック</span></div><div class="what"><b>noteメンバーシップ「ひとり経理のAI確認室」</b><p>毎月の手順追加、制度の節目のまとめ、一般論での質問回答、月1回の少人数ライブ</p></div><div class="price">月980〜1,480円</div><div class="guard">受講者の実データは受け取らない。マイナンバー・給与の個人データは扱わない</div></div>
+    <div class="step"><div class="lv">中価格②<span>ローンチ</span></div><div class="what"><b>オンライン講座「AIを確認役にする経理の基本」</b><p>動画8〜10本＋ワーク＋テンプレート一式＋質問期間</p></div><div class="price">19,800〜29,800円</div><div class="guard">特定商取引法の表示と最終確認画面（表示項目は要確認）</div></div>
+    <div class="step"><div class="lv">中価格③<span>少人数</span></div><div class="what"><b>少人数ワークショップ（3〜6人）</b><p>その場で棚卸しシートやAIルールを一緒に作る</p></div><div class="price">1回 9,800円</div><div class="guard">架空のデータか、本人が匿名化したデータだけ使う</div></div>
+    <div class="step"><div class="lv">高価格<span>1対1</span></div><div class="what"><b>1対1相談・3か月伴走</b><p>業務の棚卸し、任せる順番、学ぶ計画。タクマさんの強み（1対1）を中心に置く</p></div><div class="price">60分 15,000円<br>伴走 98,000円</div><div class="guard">税務の判断はしない。勤務先の顧客からは受けない。社長向けは就業規則の確認後</div></div>
+    <div class="step"><div class="lv">法人<span>確認後のみ</span></div><div class="what"><b>少人数の法人研修</b><p>P3の計画シート＋社内AIルール作り。助成金の手続きは社労士と組む</p></div><div class="price">半日 20万円</div><div class="guard">就業規則と競業の確認後にだけ売る</div></div>
+  </div>
+
+  <h3>30万円の組み方（手数料を引いた後）</h3>
+  <p class="note">noteはカード決済で売上の85.5%が手元に残る計算。講座・相談の決済手数料は4%と仮置き。法人研修は銀行振込で手数料0円。赤い線が30万円。</p>
+  <div class="plans">
+    <div class="plan">
+      <div class="plan-head"><h4>案A　個人向けのストック型</h4><div class="sum num">309,447<small>円／月</small></div></div>
+      <div class="stack" role="img" aria-label="メンバーシップ189,810円、有料note・テンプレート76,437円、1対1相談43,200円"><i style="width:47.45%"></i><i style="width:19.11%"></i><i style="width:10.8%"></i><span class="goal" style="left:75%"></span></div>
+      <div class="scale"><span style="left:0;transform:none">0</span><span style="left:25%">10万</span><span style="left:50%">20万</span><span class="g" style="left:75%">30万</span><span style="left:100%;transform:translateX(-100%)">40万</span></div>
+      <div class="legend"><span><b style="background:var(--ledger)"></b>メンバーシップ 1,480円×150人＝189,810円</span><span><b style="background:var(--bar2)"></b>有料note・テンプレート 2,980円×30本＝76,437円</span><span><b style="background:var(--bar3)"></b>1対1相談 15,000円×3件＝43,200円</span></div>
+      <p class="cond">売上が安定する。法人に売らない分、競業の心配は小さい（ただし就業規則の確認は前提）。150人に届くのは解約8%を入れると約23か月目。</p>
+    </div>
+    <div class="plan">
+      <div class="plan-head"><h4>案B　講座ローンチ型</h4><div class="sum num">300,354<small>円／月</small></div></div>
+      <div class="stack" role="img" aria-label="講座228,864円、ワークショップ37,632円、テンプレート33,858円"><i style="width:57.22%"></i><i style="width:9.41%"></i><i style="width:8.46%"></i><span class="goal" style="left:75%"></span></div>
+      <div class="scale"><span style="left:0;transform:none">0</span><span style="left:25%">10万</span><span style="left:50%">20万</span><span class="g" style="left:75%">30万</span><span style="left:100%;transform:translateX(-100%)">40万</span></div>
+      <div class="legend"><span><b style="background:var(--ledger)"></b>講座 29,800円×8人＝228,864円</span><span><b style="background:var(--bar2)"></b>ワークショップ 9,800円×4人＝37,632円</span><span><b style="background:var(--bar3)"></b>テンプレート 1,980円×20本＝33,858円</span></div>
+      <p class="cond">月1回のウェビナーで販売。売上はローンチの月に偏る。案Aの土台が育つまでの間を埋める役。</p>
+    </div>
+    <div class="plan">
+      <div class="plan-head"><h4>案C　法人1件＋個人 <span class="stamp">確認後のみ</span></h4><div class="sum num">306,470<small>円／月</small></div></div>
+      <div class="stack" role="img" aria-label="法人研修200,000円、メンバーシップ63,270円、1対1相談43,200円"><i style="width:50%"></i><i style="width:15.82%"></i><i style="width:10.8%"></i><span class="goal" style="left:75%"></span></div>
+      <div class="scale"><span style="left:0;transform:none">0</span><span style="left:25%">10万</span><span style="left:50%">20万</span><span class="g" style="left:75%">30万</span><span style="left:100%;transform:translateX(-100%)">40万</span></div>
+      <div class="legend"><span><b style="background:var(--ledger)"></b>法人研修 半日20万円×1件</span><span><b style="background:var(--bar2)"></b>メンバーシップ 1,480円×50人＝63,270円</span><span><b style="background:var(--bar3)"></b>1対1相談 15,000円×3件＝43,200円</span></div>
+      <p class="cond">就業規則で競業しないと確認できた場合だけ。メンバーが少なくても届く。</p>
+    </div>
+  </div>
+  <p class="note" style="margin-top:12px">参考：YouTube広告だけで30万円なら月60万再生が必要。経理×AIの長尺の中央値は845回なので、広告は「おまけ」と考えます。</p>
+
+  <h3>集客の流れ（仮定）</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>段階</th><th>仮定</th><th>必要な量（6〜12か月目の1か月あたり）</th></tr></thead>
+    <tbody>
+      <tr><td>長尺の視聴→LINE登録</td><td class="r">1%</td><td>長尺 月8本×平均3,000回＝24,000回 → 240人</td></tr>
+      <tr><td>ショートの視聴→LINE登録</td><td class="r">0.1%</td><td>月20本×2,000回＝40,000回 → 40人</td></tr>
+      <tr><td>LINE新規→メンバーシップ</td><td class="r">5%</td><td>月約280人 → 月14人の新規加入</td></tr>
+      <tr><td>メンバーシップの解約</td><td class="r">月8%</td><td>12か月目で約110人、約23か月目で150人</td></tr>
+      <tr><td>LINE→ウェビナー参加→講座購入</td><td class="r">10%→6%</td><td>有効リスト1,500人 → 150人参加 → 9人購入</td></tr>
+      <tr><td>相談・法人の問い合わせ→成約</td><td class="r">20%</td><td>問い合わせ 月15件 → 3件</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>一番効く仮定は「長尺が平均3,000回」です。</b>中央値845回の約3.5倍にあたります。当たりの実例は1万〜1.5万回です。④の「勝てる型に合わせる」「一般論は出さない」は、この収益計画の前提そのものです。</p>
+
+  <h3>3つのシナリオ（12か月目）</h3>
+  <div class="scen">
+    <div class="sc cons"><h4>保守</h4><p>長尺が中央値845回のまま。LINE登録 約110人/月、メンバー約45人</p><div class="big num">約11万円</div><p>講座を4人売れた月は約22万円</p><p class="when">30万円は2年以上</p></div>
+    <div class="sc base"><h4>基本</h4><p>長尺 平均3,000回。LINE登録 約280人/月、メンバー約110人</p><div class="big num">約26万円</div><p>案Aだけの場合。講座のローンチ月は30万円超</p><p class="when">12〜18か月目（A＋B）</p></div>
+    <div class="sc"><h4>上振れ</h4><p>1万回超の当たりが月1〜2本。LINE登録 400人/月以上、メンバー150人前後</p><div class="big num">30万円超</div><p>案Aだけで到達</p><p class="when">9〜12か月目</p></div>
+  </div>
+  <p class="note" style="margin-top:10px">6か月目の時点で保守に近ければ、法人研修（規定の確認後）を前倒しするか、講座のローンチを軸にした案Bに寄せます。YouTubeだけに頼らず、X・note検索・季節のテーマでLINE登録を増やします。</p>
+
+  <h3>フェーズ別のロードマップとKPI</h3>
+  <div class="road">
+    <div class="phase"><div class="when">0〜3か月</div><h4>確認と需要の検証</h4><div class="cols">
+      <ul>
+        <li>就業規則と今の職種を確認し、必要なら申請。<b>有料商品はこれが済んでから</b></li>
+        <li>資格の有無を確かめ、プロフィールを決める。新チャンネル名を決める</li>
+        <li>長尺8〜12本（10・1・2・7を先に）、ショート40〜60本</li>
+        <li>LINE開設、無料特典2つ。確認後に有料note・テンプレートを3〜4点</li>
+        <li>無料か低価格の1対1ヒアリングを5〜10人（支払意思と悩みの確認。個別の税務判断には答えない）</li>
+        <li>特定商取引法の表示を準備</li>
+      </ul>
+      <div class="kpi"><b>KPI（目標）</b>LINE登録300人／特典DL 300件／有料note・テンプレート月5〜10本（約1.3〜2.5万円）／ヒアリング5人以上／支払意思の価格帯を確定</div>
+    </div></div>
+    <div class="phase"><div class="when">3〜6か月</div><h4>中価格の商品を立ち上げる</h4><div class="cols">
+      <ul>
+        <li>メンバーシップ開始（創設メンバー価格）</li>
+        <li>講座のβ版を少人数・割引で出し、感想を集める（特典と引き換えにしない）</li>
+        <li>月1回の録画ウェビナーか少人数ライブ</li>
+        <li>伸び率3倍以上のテーマをシリーズ化。キャリアノートで単発の回を1本</li>
+        <li><b>6か月目に基本・保守のどちらに近いか判定</b>し、計画を直す</li>
+      </ul>
+      <div class="kpi"><b>KPI（目標）</b>LINE累計1,000〜1,500人／メンバー50人／講座β 10人／長尺の再生中央値3,000回／月収10〜15万円</div>
+    </div></div>
+    <div class="phase"><div class="when">6〜12か月</div><h4>月30万円（基本シナリオの場合）</h4><div class="cols">
+      <ul>
+        <li>講座を正式に出し、月1回のローンチを回す</li>
+        <li>メンバーシップを100人超へ</li>
+        <li>規定の確認がとれていれば法人研修のメニューを作る</li>
+        <li>2027年1〜3月の確定申告・3月決算、4月の新リース基準に合わせて先に作る</li>
+        <li>教材の時事部分を改訂</li>
+      </ul>
+      <div class="kpi"><b>KPI（目標）</b>LINE累計3,000人／メンバー100〜110人（解約8%以下）／講座 月8人、または法人1件／<b>ローンチ月に30万円以上</b>（保守なら月10〜20万円）</div>
+    </div></div>
+    <div class="phase"><div class="when">12〜24か月</div><h4>安定化</h4><div class="cols">
+      <ul>
+        <li>メンバーシップ150人へ（案Aだけで30万円）</li>
+        <li>講座の改訂と年1〜2回の大きなローンチ</li>
+        <li>規定が許せば法人研修を定番化</li>
+      </ul>
+      <div class="kpi"><b>KPI（目標）</b>メンバー150人／ローンチのない月も30万円</div>
+    </div></div>
+  </div>
+
+  <h3>商品に組み込む法的なガードレール</h3>
+  <div class="guards">
+    <div><h4>税理士法52条</h4><p>コメント・DM・メンバーシップ・1対1のどこでも「私の場合は」には答えない。一般論と国税庁の資料の場所を案内するだけ。演習は架空の会社。全商品に「個別の判断は顧問税理士へ」。</p></div>
+    <div><h4>副業・利益相反</h4><p>就業規則の確認が先。勤務先の顧客・社名・社内資料・画面は使わない。記帳・経理代行など同じ種類のサービスは扱わない。</p></div>
+    <div><h4>地方公務員法34条</h4><p>市役所時代の具体的な事例や内部の運用は話さない。「元税務職員」ではなく「元市役所の税務担当」と書く。</p></div>
+    <div><h4>ステマ規制</h4><p>SaaSのアフィリエイトや紹介には「PR」「広告」と表示。受講者の感想を特典や割引と引き換えに集めない。</p></div>
+    <div><h4>景品表示法</h4><p>「誰でも月○時間削減」とは書かない。数字は「架空の会社・この条件での実測」と明記。「必ず」「絶対」は使わない。</p></div>
+    <div><h4>特商法・個人情報</h4><p>講座・テンプレートは通信販売の表示が必要な見込み（要確認）。受講者の給与・取引先・マイナンバーは受け取らない。</p></div>
+  </div>
+</section>
+
+<!-- 要確認・次の一手 -->
+<section id="next">
+  <div class="sec-head"><div class="sec-no">次</div><h2>要確認事項と次のアクション</h2><p>上から順に片づけると、最初の3か月が動き出します。</p></div>
+  <div class="checks">
+    <div><h4>タクマさんに確認すること <span class="stamp">要確認</span></h4><ol>
+      <li>就業規則の副業条項（許可制か届出制か）、競業避止の範囲、勤務先の事業内容</li>
+      <li>今の会社での職種（経理の実務を担当しているか）</li>
+      <li>簿記などの資格の有無</li>
+      <li>新チャンネルにするか、チャンネル名</li>
+      <li>実演に使える会計ソフトとAIのアカウント（勤務先のものは使わない）</li>
+      <li>会計事務所の職員を対象にすることへの抵抗感</li>
+    </ol></div>
+    <div><h4>一次資料で確かめること <span class="stamp">要確認</span></h4><ol>
+      <li>マネーフォワード「AI Cowork」の一般提供の有無</li>
+      <li>令和8年分の年末調整の控除額（国税庁の手引き）</li>
+      <li>人材開発支援助成金の要件</li>
+      <li>特定商取引法の表示事項と住所の扱い</li>
+      <li>noteの手数料の最新値</li>
+      <li>マネーフォワード・freeeの最新料金</li>
+      <li>税理士への送客で対価をもらってよいか</li>
+    </ol></div>
+    <div><h4>次のアクション（順番）</h4><ol>
+      <li>就業規則を確認する</li>
+      <li>支払意思のヒアリングを設計し、5人に実施する</li>
+      <li>LINE特典を2つ作る（安全チェックリスト、棚卸しシート）</li>
+      <li>タイトル案10・1・2・7の台本を作る</li>
+      <li>YouTube APIの上限が回復したら、取れなかったキーワードを取り直す</li>
+    </ol></div>
+  </div>
+</section>
+
+<!-- 限界 -->
+<section id="limits">
+  <div class="sec-head"><div class="sec-no">注</div><h2>リサーチの限界とチェック記録</h2><p>数字を外に出す前に、ここを読んでください。</p></div>
+  <details>
+    <summary>リサーチの限界</summary>
+    <div>
+      <ul>
+        <li><b>開けなかったサイト：</b>知恵袋・note.com・PR TIMES・e-Stat・総務省・厚労省・freee・マネーフォワード・doda・Udemyなど。悩みの声144件はすべて検索結果に出たタイトルか抜粋で、本文・回答は未確認。多くの調査の数字も検索結果の要約から取った「※要約」です。</li>
+        <li><b>YouTube APIの上限：</b>18キーワードのうち6つは0件、2つは並び順の片方だけ。既知の26チャンネルの最近30本（743本）で補った。コメントは関連度順の上位100件まで。</li>
+        <li><b>取れなかったデータ：</b>支払意思の直接の声、検索ボリューム、経理×AIで売上を公表している個人の事例、noteやUdemyの販売数、ひとり経理の最新の全国調査。</li>
+        <li><b>小さい標本：</b>インボイス社327名、IT Leaders 104名、当たり動画のタイトル分析61本。</li>
+        <li><b>試算：</b>転換率・平均再生数・解約率・決済手数料4%はすべて仮定。0〜3か月目の実測で置き換える前提。</li>
+      </ul>
+    </div>
+  </details>
+  <details>
+    <summary>チェック担当が直した主な点</summary>
+    <div>
+      <ul>
+        <li><b>noteの手数料：</b>利用料10%だけ → カード決済5%＋利用料10%（手元85.5%）。これで案Aが29.5万円に落ちたため、相談を2件→3件にして30.9万円に組み直した。</li>
+        <li><b>メンバーの解約：</b>12か月目に150人 → 解約8%を入れて約110人。150人は約23か月目。</li>
+        <li><b>シナリオ：</b>保守・基本・上振れの3つと、6か月目の見直しを追加。</li>
+        <li><b>副業：</b>確認前でもテンプレート販売は可 → 有料商品はすべて就業規則の確認後。</li>
+        <li><b>経歴：</b>「現役経理」 → 「今も経理の会社に勤めている」。職種は要確認。</li>
+        <li><b>引用：</b>縮めて引用していたコメント3件と動画タイトルを原文に戻し、要旨は要旨と明記。</li>
+        <li><b>出典：</b>Tubefilterの記事にない言い回しを修正し、別チャンネル案は推論と明記。</li>
+      </ul>
+      <p>約60か所の数字・日付をノートと照合し、悩みの件数と強度を再計算して一致を確認しました。</p>
+    </div>
+  </details>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="closing">売るべきものは「時短の技術」ではなく、ひとりで判断する人の安心です。</p>
+    <p>最初の3か月は売上より、「AIを確認役にする」という言葉に人が反応するか、月いくらなら払うか、長尺が約3,000回に届くかを確かめる期間です。</p>
+    <p>出典の全リストと詳しい表は、同じフォルダの報告書（Markdown版）にあります。</p>
+  </div>
+</footer>
