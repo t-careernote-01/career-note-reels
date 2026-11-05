@@ -1,0 +1,636 @@
+<title>小さな会社の経理 戦略書</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=BIZ+UDGothic:wght@400;700&family=Shippori+Mincho+B1:wght@600;800&display=swap">
+<style>
+/* Layout: 帳簿の罫線をモチーフにした一段組。上に目次バー、各章は「科目見出し」＋本文。要確認・注意は朱の印。第1回の資料と同じ体系。 */
+:root{
+  --bg:#f6f8f7; --paper:#ffffff; --ink:#18242b; --sub:#56656c; --rule:#d5dfdc; --rule-soft:#e7eeec;
+  --ledger:#1f6b5c; --ledger-soft:#e1efeb; --shu:#c23b22; --shu-soft:#fbe9e5; --amber:#a36a00; --amber-soft:#fbf1de;
+  --bar2:#7fb7a9; --bar3:#c9ddd7;
+  --f-display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --f-body:"BIZ UDPGothic","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --f-num:"BIZ UDGothic","Hiragino Sans","Yu Gothic",ui-monospace,monospace;
+  --s1:.75rem; --s2:.875rem; --s3:1rem; --s4:1.2rem; --s5:1.6rem; --s6:2.3rem;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101719; --paper:#162024; --ink:#e4ecea; --sub:#9db0ad; --rule:#2c3b3f; --rule-soft:#223034;
+  --ledger:#5fbfa8; --ledger-soft:#1b3330; --shu:#ff7a5e; --shu-soft:#3a1f1a; --amber:#e0a542; --amber-soft:#33291a;
+  --bar2:#3f8a79; --bar3:#2b4a44; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101719; --paper:#162024; --ink:#e4ecea; --sub:#9db0ad; --rule:#2c3b3f; --rule-soft:#223034;
+  --ledger:#5fbfa8; --ledger-soft:#1b3330; --shu:#ff7a5e; --shu-soft:#3a1f1a; --amber:#e0a542; --amber-soft:#33291a;
+  --bar2:#3f8a79; --bar3:#2b4a44; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:var(--s3);line-height:1.8;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+a{color:var(--ledger)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--ledger);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule)}
+nav.toc .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
+nav.toc a{flex:none;text-decoration:none;color:var(--sub);font-size:var(--s2);padding:4px 10px;border-radius:4px;white-space:nowrap}
+nav.toc a:hover{background:var(--ledger-soft);color:var(--ledger)}
+
+header.cover{background:var(--paper);border-bottom:1px solid var(--rule)}
+header.cover .wrap{padding-block:48px 40px;display:grid;gap:24px}
+.eyebrow{font-size:var(--s1);letter-spacing:.12em;color:var(--sub)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(1.8rem,5vw,2.9rem);line-height:1.35;margin:0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--ledger);border-bottom:3px solid var(--ledger)}
+.lead{font-size:var(--s4);max-width:44em;margin:0;line-height:1.9}
+.meta{font-size:var(--s2);color:var(--sub)}
+
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--rule);border-radius:6px;background:var(--paper);overflow:hidden}
+.tile{padding:16px 18px;border-right:1px solid var(--rule-soft);min-width:0}
+.tile:last-child{border-right:0}
+.tile .v{font-family:var(--f-num);font-weight:700;font-size:var(--s6);line-height:1.2;color:var(--ledger)}
+.tile .v small{font-size:var(--s3);margin-left:2px}
+.tile .k{font-size:var(--s2);color:var(--sub);line-height:1.6;margin-top:6px}
+@media (max-width:760px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.tile:nth-child(2){border-right:0}.tile:nth-child(-n+2){border-bottom:1px solid var(--rule-soft)}}
+
+main section{padding-block:56px 8px}
+.sec-head{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:baseline;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:24px}
+.sec-no{font-family:var(--f-display);font-weight:800;font-size:var(--s6);color:var(--ledger);line-height:1}
+h2{font-family:var(--f-display);font-weight:800;font-size:var(--s5);margin:0;line-height:1.4;text-wrap:balance}
+.sec-head p{grid-column:2;margin:0;color:var(--sub);font-size:var(--s2)}
+h3{font-size:var(--s4);margin:32px 0 12px;line-height:1.5;text-wrap:balance}
+h4{font-size:var(--s3);margin:0 0 6px}
+p{margin:0 0 12px;max-width:46em}
+.note{font-size:var(--s2);color:var(--sub)}
+
+.stamp{display:inline-block;font-size:var(--s1);font-weight:700;color:var(--shu);border:1.5px solid var(--shu);border-radius:3px;padding:0 6px;line-height:1.6;letter-spacing:.05em;vertical-align:2px;white-space:nowrap}
+.tag{display:inline-block;font-size:var(--s1);padding:0 7px;border-radius:3px;line-height:1.7;white-space:nowrap;vertical-align:1px}
+.tag.fact{background:var(--ledger-soft);color:var(--ledger)}
+.tag.inf{background:var(--amber-soft);color:var(--amber)}
+.tag.fix{background:var(--shu-soft);color:var(--shu);font-weight:700}
+.tag.up{background:var(--ledger-soft);color:var(--ledger);font-weight:700}
+.tag.down{background:var(--amber-soft);color:var(--amber);font-weight:700}
+
+.verdict{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:24px}
+.verdict ol{margin:0;padding-left:1.4em;display:grid;gap:14px}
+.verdict li::marker{font-family:var(--f-num);font-weight:700;color:var(--ledger)}
+.prereq{margin-top:20px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.prereq div{border:1.5px dashed var(--shu);border-radius:6px;padding:14px 16px;background:var(--shu-soft);min-width:0}
+.prereq h4{color:var(--shu)}
+.prereq p{font-size:var(--s2);margin:0}
+@media (max-width:760px){.prereq{grid-template-columns:1fr}}
+
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--paper);margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:var(--s2);line-height:1.7}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--rule-soft)}
+th{background:var(--ledger-soft);color:var(--ledger);font-weight:700;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right;font-family:var(--f-num);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.total td{font-weight:700;border-top:2px solid var(--ink)}
+td.nowrap{white-space:nowrap}
+
+.chart{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:18px 20px;margin:16px 0}
+.chart h4{margin-bottom:4px}
+.bars{display:grid;gap:10px;margin-top:14px}
+.bar{display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr) 130px;gap:12px;align-items:center;font-size:var(--s2)}
+.bar .lbl{min-width:0}
+.bar .track{height:16px;background:var(--rule-soft);border-radius:2px;position:relative;overflow:hidden}
+.bar .fill{height:100%;background:var(--bar2);border-radius:2px}
+.bar.hi .fill{background:var(--ledger)}
+.bar.lo .fill{background:var(--bar3)}
+.bar .val{font-family:var(--f-num);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.bar .val small{color:var(--sub)}
+.goalv{position:absolute;top:0;bottom:0;width:0;border-left:2px solid var(--shu)}
+@media (max-width:640px){.bar{grid-template-columns:1fr 100px}.bar .lbl{grid-column:1/-1}}
+.charts2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.charts2 .chart{margin:0}
+@media (max-width:760px){.charts2{grid-template-columns:1fr}}
+
+/* 入口と出口 */
+.flow{display:grid;grid-template-columns:minmax(0,1.3fr) 48px minmax(0,1fr);gap:0;align-items:stretch;margin:16px 0}
+.flow .col{display:grid;gap:8px;min-width:0}
+.flow .head{font-size:var(--s1);letter-spacing:.1em;color:var(--sub);font-weight:700}
+.door{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;font-size:var(--s2)}
+.door b{display:block;font-size:var(--s3)}
+.door .meta2{color:var(--sub)}
+.arrow{display:flex;align-items:center;justify-content:center;color:var(--ledger);font-size:28px;font-family:var(--f-num)}
+.exit{background:var(--ledger-soft);border:1.5px solid var(--ledger);border-radius:6px;padding:16px 18px;display:grid;gap:8px;align-content:center}
+.exit b{font-size:var(--s4);font-family:var(--f-display);line-height:1.5}
+.exit p{font-size:var(--s2);margin:0}
+.drop{background:var(--paper);border:1.5px dashed var(--rule);border-radius:6px;padding:10px 14px;font-size:var(--s2);color:var(--sub);margin-top:8px}
+@media (max-width:760px){.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg);height:40px}}
+
+.pains{display:grid;gap:10px}
+.pain{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:16px 20px;display:grid;grid-template-columns:3em minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.pain.top{border:1.5px solid var(--shu)}
+.pain .rk{font-family:var(--f-display);font-weight:800;font-size:var(--s6);color:var(--ledger);line-height:1}
+.pain h4{font-size:var(--s4);line-height:1.5}
+.pain blockquote{margin:6px 0 0;padding:0 0 0 12px;border-left:3px solid var(--rule);font-size:var(--s2)}
+.pain .sell{font-size:var(--s2);display:grid;gap:6px;min-width:0}
+.pain .sell div{min-width:0}
+.pain .sell b{color:var(--ledger)}
+.pain .sell .no b{color:var(--shu)}
+@media (max-width:760px){.pain{grid-template-columns:2.4em minmax(0,1fr)}.pain .sell{grid-column:2}}
+
+.concept{background:var(--paper);border:1.5px solid var(--ledger);border-radius:6px;padding:24px}
+.concept .big{font-family:var(--f-display);font-weight:800;font-size:clamp(1.4rem,3.6vw,2rem);line-height:1.5;margin:0 0 14px;text-wrap:balance}
+.vals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
+.vals div{border-top:3px solid var(--ledger);padding-top:10px;min-width:0}
+.vals h4{font-size:var(--s2);color:var(--ledger)}
+.vals p{font-size:var(--s2);margin:0}
+@media (max-width:860px){.vals{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.vals{grid-template-columns:1fr}}
+
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:8px}
+.rules div{border-left:3px solid var(--ledger);padding:4px 0 4px 14px;min-width:0}
+.rules p{font-size:var(--s2);margin:0}
+@media (max-width:640px){.rules{grid-template-columns:1fr}}
+
+.sheet{background:var(--paper);border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin:14px 0}
+.sheet .cap{padding:10px 14px;font-size:var(--s2);color:var(--sub);border-bottom:1px solid var(--rule)}
+.sheet table{font-family:var(--f-num);font-size:var(--s1)}
+.sheet th{font-family:var(--f-body)}
+.sheet th.c1{background:var(--ledger-soft);color:var(--ledger)}
+.sheet th.c2{background:var(--amber-soft);color:var(--amber)}
+.sheet th.c3{background:var(--shu-soft);color:var(--shu)}
+
+.pillars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pillar{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;min-width:0}
+.pillar .pc{font-family:var(--f-num);font-weight:700;font-size:var(--s5);color:var(--ledger);line-height:1.2}
+.pillar h4{margin:4px 0}
+.pillar p{font-size:var(--s2);margin:0}
+.pillar .share{height:6px;background:var(--rule-soft);border-radius:2px;margin-top:10px;overflow:hidden}
+.pillar .share i{display:block;height:100%;background:var(--ledger)}
+@media (max-width:860px){.pillars{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.titles{display:grid;border-top:1px solid var(--rule)}
+.title-row{display:grid;grid-template-columns:2.4em minmax(0,1fr) auto;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule-soft);align-items:baseline}
+.title-row .n{font-family:var(--f-num);color:var(--sub);font-weight:700}
+.title-row .t{font-weight:700;min-width:0}
+.title-row .why{display:block;font-weight:400;font-size:var(--s2);color:var(--sub);margin-top:2px}
+.title-row .who{font-size:var(--s1);white-space:nowrap}
+.title-row.first .n{color:var(--shu)}
+@media (max-width:640px){.title-row{grid-template-columns:2em minmax(0,1fr)}.title-row .who{grid-column:2}}
+
+.ladder{display:grid;gap:8px}
+.step{display:grid;grid-template-columns:90px minmax(0,1fr) 150px 90px;gap:16px;align-items:start;background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:12px 18px}
+.step.out{opacity:.72;border-style:dashed}
+.step .lv{font-weight:700;color:var(--ledger);font-size:var(--s2)}
+.step .what{min-width:0}
+.step .what b{display:block}
+.step .what p{font-size:var(--s2);margin:2px 0 0;color:var(--sub)}
+.step .price{font-family:var(--f-num);font-weight:700;text-align:right;font-size:var(--s2)}
+.step .inplan{text-align:right}
+@media (max-width:700px){.step{grid-template-columns:1fr}.step .price,.step .inplan{text-align:left}}
+
+.scen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.sc{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:16px 18px;min-width:0;display:grid;gap:6px;align-content:start}
+.sc.base{border:1.5px solid var(--ledger)}
+.sc h4{margin:0}
+.sc .big{font-family:var(--f-num);font-weight:700;font-size:var(--s5);line-height:1.3}
+.sc p{font-size:var(--s2);margin:0}
+.sc .when{font-weight:700;color:var(--ledger)}
+.sc.cons .when{color:var(--amber)}
+@media (max-width:760px){.scen{grid-template-columns:1fr}}
+.calc{font-family:var(--f-num);font-size:var(--s1);background:var(--ledger-soft);border-radius:6px;padding:12px 14px;overflow-x:auto;white-space:pre;line-height:1.8;margin:12px 0}
+
+.road{display:grid;border-left:2px solid var(--ledger);margin-left:8px}
+.phase{position:relative;padding:0 0 24px 24px}
+.phase::before{content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:2px solid var(--ledger)}
+.phase .when{font-family:var(--f-num);font-weight:700;color:var(--ledger);font-size:var(--s2)}
+.phase h4{font-size:var(--s4);margin:2px 0 8px}
+.phase .cols{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:16px}
+.phase ul{margin:0;padding-left:1.2em;font-size:var(--s2)}
+.phase li{margin-bottom:3px}
+.kpi{background:var(--ledger-soft);border-radius:6px;padding:12px 14px;font-size:var(--s2);min-width:0}
+.kpi b{display:block;color:var(--ledger);margin-bottom:4px}
+.kpi .gate{margin-top:8px;color:var(--shu)}
+@media (max-width:760px){.phase .cols{grid-template-columns:1fr}}
+
+.guards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.guards div{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;min-width:0}
+.guards h4{color:var(--shu);font-size:var(--s2)}
+.guards p{font-size:var(--s2);margin:0}
+@media (max-width:760px){.guards{grid-template-columns:1fr}}
+
+.weeks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.week{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;min-width:0;display:grid;gap:8px;align-content:start}
+.week .wn{font-family:var(--f-num);font-weight:700;color:var(--ledger);font-size:var(--s2)}
+.week ul{margin:0;padding-left:1.1em;font-size:var(--s2)}
+.week li{margin-bottom:4px}
+.week .done{font-size:var(--s1);background:var(--ledger-soft);color:var(--ledger);padding:6px 8px;border-radius:4px}
+@media (max-width:900px){.weeks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.weeks{grid-template-columns:1fr}}
+.dont{margin-top:14px;border:1.5px dashed var(--shu);background:var(--shu-soft);border-radius:6px;padding:12px 16px;font-size:var(--s2)}
+
+.checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.checks > div{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:16px 18px;min-width:0}
+.checks ol{margin:0;padding-left:1.3em;font-size:var(--s2)}
+.checks li{margin-bottom:6px}
+@media (max-width:860px){.checks{grid-template-columns:1fr}}
+
+details{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:0 18px;margin:12px 0}
+details summary{cursor:pointer;padding:14px 0;font-weight:700}
+details[open] summary{border-bottom:1px solid var(--rule-soft);margin-bottom:12px}
+details > div{padding-bottom:16px;font-size:var(--s2)}
+details ul{padding-left:1.2em;margin:0 0 10px}
+
+footer{padding-block:48px 64px;color:var(--sub);font-size:var(--s2)}
+.closing{font-family:var(--f-display);font-weight:800;font-size:var(--s5);line-height:1.6;color:var(--ink);max-width:30em;margin-bottom:16px;text-wrap:balance}
+</style>
+
+<header class="cover">
+  <div class="wrap">
+    <div class="eyebrow">経理DX・AI 事業戦略リサーチ 第2回（再検証）／ 最終報告</div>
+    <h1>集める相手と売る相手を分けて、<br><em>小さな会社の経理</em>を取る</h1>
+    <p class="lead">YouTubeで人が集まる層と、タクマさんが安全に長く売れる層は別でした。看板は「小さな会社の経理」にして入口を広く取り、<b>お金を払ってもらうのは中小企業のひとり・少人数経理</b>にしぼります。売るのは時短ではなく、AIをもう1人の確認役にして「ここまで確かめた」と言える仕組みです。</p>
+    <div class="tiles" role="list">
+      <div class="tile" role="listitem"><div class="v">687<small>回</small></div><div class="k">会社経理向け動画の再生中央値。3つの層で最も弱い（個人事業主 2,269回）</div></div>
+      <div class="tile" role="listitem"><div class="v">31<small>点</small></div><div class="k">売る相手としての採点。会社経理31・個人事業主20・一人社長19（40点満点）</div></div>
+      <div class="tile" role="listitem"><div class="v">1.02<small>倍</small></div><div class="k">テンプレ配布ありの伸び率（なしは1.00倍）。配布は再生ではなく登録の入口</div></div>
+      <div class="tile" role="listitem"><div class="v">約22<small>万円</small></div><div class="k">基本シナリオの12か月目（立ち上がり込み）。平均30万円は19か月目前後</div></div>
+    </div>
+    <div class="meta">作成 2026年11月5日 ／ 調査担当5人（YouTube 1,390本・589チャンネル15,281本・コメント2,054件を再取得）＋報告書担当＋チェック担当（約70か所を照合、21か所を修正）／ タクマさんへ</div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="目次">
+  <div class="wrap">
+    <a href="#summary">結論</a><a href="#changes">第1回からの変更</a><a href="#target">① ターゲット</a><a href="#pains">② 悩み</a><a href="#concept">③ コンセプト</a><a href="#sheet">④ シート配布</a><a href="#content">⑤ コンテンツ</a><a href="#money">⑥ 収益</a><a href="#legal">⑦ 法律</a><a href="#first30">⑧ 最初の30日</a><a href="#open">要確認・限界</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="summary">
+  <div class="sec-head"><div class="sec-no">結</div><h2>結論：これから取るべき戦略</h2><p>最初に読むページ。数字の出典と計算は各章にあります。</p></div>
+  <div class="verdict">
+    <ol>
+      <li><b>ターゲットは2段に分ける。</b>YouTubeでは「小さな会社の経理」を看板に、会社の経理担当・社長・年末調整の時期の需要で人を集めます。お金を払ってもらう相手は、中小企業でひとり、または少人数で経理をしている会社員です。個人事業主は1〜3月の季節企画だけにします。<span class="tag inf">推論</span></li>
+      <li><b>売るのは「確かめる手段」と「休める型」。</b>お金を払ってでも解決したい悩みの1位は「ひとりで判断し、ミスが自分の責任になるのに、確かめる手段がない」。2位は「自分が休んでも、辞めても回る型がない」です。個別の税務判断は売りません。<span class="tag fact">事実</span>＋<span class="tag inf">推論</span></li>
+      <li><b>毎回のスプレッドシート配布は「やる」。ただし売上には数えない。</b>配っても再生は伸びませんが、LINE登録の入口になります。経理×AIの小さいチャンネルは、配布もLINEもほぼ使っていません。<span class="tag fact">事実</span></li>
+      <li><b>月30万円は「登録率」しだいで、第1回より時間がかかる。</b>基本シナリオで12か月目は約22万円、平均30万円は19か月目前後です。再生が中央値のままなら12か月目は約2〜4万円です。視聴→LINE登録率が0.3%か2%かで、必要な再生数が約7倍変わります。<span class="tag inf">試算</span></li>
+      <li><b>最初の90日は、売上より「登録率」と「登録者の立場」を測る。</b>11月中に年末調整の動画を1本出し、毎回3列シートを配りながら、動画ごとの登録率と、登録者のうち会社の経理の割合を記録します。<span class="tag inf">推論</span></li>
+    </ol>
+    <div class="prereq">
+      <div><h4>最初に確かめる ①</h4><p><b>就業規則と勤務先の事業内容。</b>有料商品を出せるか、一人社長をどこまで扱うかがこれで決まります。無料の発信でも届出が要るなら、動画1の前に済ませます。</p></div>
+      <div><h4>最初に確かめる ②</h4><p><b>今の職種と資格。</b>「現役経理」と名乗れるか、プロフィールの書き方が決まります。</p></div>
+      <div><h4>守り続ける</h4><p><b>個別の税務判断はしない（税理士法52条）。</b>無料のコメント、メンバーシップ、1対1でも同じです。一般論の説明は問題ありません。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="changes">
+  <div class="sec-head"><div class="sec-no">変</div><h2>第1回から何が変わったか</h2><p><span class="tag up">強まった</span><span class="tag fix">訂正</span><span class="tag down">弱まった</span>の3種類で示します。</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>論点</th><th>第1回</th><th>第2回</th><th>判定</th></tr></thead>
+    <tbody>
+      <tr><td><b>主なターゲット</b></td><td>中小のひとり・少人数経理</td><td>買う人は変えない。集める人は別に設計し、看板を「小さな会社の経理」に</td><td><span class="tag up">維持＋追加</span></td></tr>
+      <tr><td><b>一人社長</b></td><td>6か月目以降の候補</td><td>入口としては最初から扱う。有料商品は就業規則の確認後</td><td><span class="tag up">強まった</span></td></tr>
+      <tr><td><b>個人事業主</b></td><td>主な客にしない</td><td>変えない。強いのはAIなしの確定申告で、質問の多くが税務判断</td><td><span class="tag up">強まった</span></td></tr>
+      <tr><td><b>悩みの1位</b></td><td>件数1位は「DXの壁」</td><td>口コミサイトを除くと10位前後。上位はAI関連・ひとり経理・キャリア</td><td><span class="tag fix">訂正</span></td></tr>
+      <tr><td><b>AIの入口</b></td><td>会計ソフト×AIで仕訳を下書き</td><td>AIでダブルチェック、引き継ぎ資料をAIで引ける形に、社内ルールの範囲で使う</td><td><span class="tag fix">訂正</span></td></tr>
+      <tr><td><b>テンプレート</b></td><td>有料（2,980円×月30本）を収益に計上</td><td>無料のLINE特典にし、収益には数えない</td><td><span class="tag fix">訂正</span></td></tr>
+      <tr><td><b>転換率などの前提</b></td><td>すべて仮定（決済手数料4%など）</td><td>根拠のある範囲に置き換え（登録0.3〜2%、Stripe 3.6%、LINE費用を差し引き）</td><td><span class="tag up">強化</span></td></tr>
+      <tr><td><b>月30万円の時期</b></td><td>基本で12〜18か月</td><td>基本で平均30万円は19か月目前後。保守では12か月目に約2〜4万円</td><td><span class="tag down">弱まった</span></td></tr>
+      <tr><td><b>生成AIの活用方針</b></td><td>49.7%（他国より低い）</td><td>令和8年版で68.9%。業務で使う企業86.4%（対象の条件つき）</td><td><span class="tag fix">訂正</span></td></tr>
+      <tr><td><b>年末調整の控除額</b></td><td>民間の1記事だけ</td><td>基礎控除104/67/62万円の3段階を複数の要約で確認</td><td><span class="tag up">強まった</span></td></tr>
+      <tr><td><b>税理士法52条</b></td><td>個別相談に答えない</td><td>境界がはっきりした：一般論の説明は可、具体的な事案への回答が税務相談</td><td><span class="tag up">強化</span></td></tr>
+      <tr><td><b>特定商取引法</b></td><td>未検証</td><td>「請求があれば遅滞なく開示」で住所・電話は省略可</td><td><span class="tag up">確認</span></td></tr>
+      <tr><td><b>助成金</b></td><td>法人研修で使える候補</td><td>個人の商品では前面に出さない（個人講師が対象かは未確認）</td><td><span class="tag down">弱まった</span></td></tr>
+      <tr><td><b>競合の導線</b></td><td>未調査</td><td>大手は最近30本の7〜10割で特典・LINE。経理×AIの小さいチャンネルはほぼなし</td><td><span class="tag up">新発見</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="target">
+  <div class="sec-head"><div class="sec-no">①</div><h2>ターゲット：反応する人と、払う人は違う</h2><p>「フリーランス・個人事業主か、会社の経理か」への答え。</p></div>
+
+  <div class="charts2">
+    <div class="chart">
+      <h4>YouTubeでの反応（再生数の中央値）</h4>
+      <p class="note" style="margin:0">直近12か月の関連1,390本をタイトルの語で分類（視聴者の実際の属性ではない）</p>
+      <div class="bars">
+        <div class="bar hi"><div class="lbl">個人事業主・フリーランス <small class="note">304本</small></div><div class="track"><div class="fill" style="width:100%"></div></div><div class="val">2,269回 <small>1.42倍</small></div></div>
+        <div class="bar"><div class="lbl">一人社長・経営者 <small class="note">196本</small></div><div class="track"><div class="fill" style="width:50.3%"></div></div><div class="val">1,142回 <small>1.62倍</small></div></div>
+        <div class="bar lo"><div class="lbl">会社の経理 <small class="note">458本</small></div><div class="track"><div class="fill" style="width:30.3%"></div></div><div class="val">687回 <small>1.24倍</small></div></div>
+      </div>
+      <p class="note" style="margin:12px 0 0">ただし個人事業主の強さは<b>AIなしの確定申告・税制</b>、一人社長の強さは<b>経理の語を含まないAI経営</b>（経理の語を含む33本は中央値167回）から来ています。</p>
+    </div>
+    <div class="chart">
+      <h4>売る相手としての採点（40点満点）</h4>
+      <p class="note" style="margin:0">痛みの強さ・払う力・人数・競合・法律・勤務先との競業・季節性・本人との相性の8基準。重み付けなしの推論</p>
+      <div class="bars">
+        <div class="bar hi"><div class="lbl">会社の経理（中小のひとり・少人数）</div><div class="track"><div class="fill" style="width:77.5%"></div></div><div class="val">31点</div></div>
+        <div class="bar lo"><div class="lbl">個人事業主・フリーランス</div><div class="track"><div class="fill" style="width:50%"></div></div><div class="val">20点</div></div>
+        <div class="bar lo"><div class="lbl">一人社長・小規模法人</div><div class="track"><div class="fill" style="width:47.5%"></div></div><div class="val">19点</div></div>
+      </div>
+      <p class="note" style="margin:12px 0 0">個人事業主は質問の6〜7割が税務判断（推論）で、確定申告の発信は登録者100万人規模の会計士チャンネルなどで飽和。一人社長が払う先は、代わりにやってくれる税理士・記帳代行です。</p>
+    </div>
+  </div>
+
+  <h3>決定：入口は「小さな会社の経理」、出口は会社の経理担当</h3>
+  <div class="flow" aria-label="入口から出口への流れ">
+    <div class="col">
+      <div class="head">入口（YouTube・note・Xで集める）</div>
+      <div class="door"><b>① 会社の経理（通年）</b><span class="meta2">AIでダブルチェック、AIの比較、引き継ぎ書×AI、社内ルール。AIの語を入れると伸び率 1.14→1.62倍</span></div>
+      <div class="door"><b>② 年末調整などの季節もの</b><span class="meta2">「年末調整 2026」は伸び率7.68倍。コメント欄に経理担当が名乗り出ている</span></div>
+      <div class="door"><b>③ 小さな会社の社長</b><span class="meta2">「社長 経理 自動化」2.88倍。社長が見て経理担当に回す、は推論</span></div>
+      <div class="door"><b>④ 副業会社員（1〜3月だけ）</b><span class="meta2">確定申告を「確かめながら」進める一般的な手順</span></div>
+    </div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="exit">
+      <div class="head">出口（お金を払ってもらう）</div>
+      <b>中小企業のひとり・少人数経理の会社員</b>
+      <p>新任・異動直後の人、AIに興味はあるが未使用の人を含む。メンバーシップ・講座・少人数ワークショップ・1対1で売る。</p>
+      <p class="note">理由：自己負担でスキルアップする人が37.0%で最多／税務相談になりにくい／勤務先と競業しにくい／確認手順は空白</p>
+    </div>
+  </div>
+  <div class="drop"><b>扱わない：</b>個人事業主の税務・申告の相談、社長向けの代行や顧問的な支援（税理士法52条・勤務先との競業・飽和）</div>
+
+  <p style="margin-top:16px"><b>弱いところもあります。</b>集めた社長や従業員は、そのまま出口の客にはなりません。そこで<b>LINE登録のときに立場を1問だけ聞き</b>、登録者に占める会社の経理の割合を物差しにします。</p>
+
+  <h3>この判断が変わる条件</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>条件</th><th>変わること</th></tr></thead>
+    <tbody>
+      <tr><td>勤務先が個人事業主・小規模法人向けの記帳代行・経理代行を<b>していない</b></td><td>一人社長を2本目の柱にする（社長向けの講座・少人数ワークショップ）</td></tr>
+      <tr><td>勤務先が小規模法人向けの記帳代行・BPOを<b>している</b></td><td>一人社長には「自分で経理を回す方法」を売らない。出口は会社の経理だけ</td></tr>
+      <tr><td>就業規則で副業が許可制で、許可が下りない</td><td>有料商品は出さない。無料の発信を続けるかも考え直す</td></tr>
+      <tr><td>本人の職種が経理の実務ではない</td><td>「現役経理」とは名乗らず、「経理の会社に勤める、税・会計の職場を3つ経験した人」と書く</td></tr>
+      <tr><td>90日で、社長向けの回の登録率が会社経理向けの<b>2倍以上</b>（各3本以上）</td><td>一人社長の比重を上げる（就業規則に問題がなければ）</td></tr>
+      <tr><td>90日で、登録者のうち会社の経理が<b>3割未満</b></td><td>入口を広げすぎ。社長・季節の回を減らし、会社経理向けとnote・Xを増やす</td></tr>
+      <tr><td>90日で、会社経理向け長尺の登録率が<b>0.3%未満</b>（8本以上）</td><td>YouTubeの本数を減らし、note・Xの比重を上げる</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="pains">
+  <div class="sec-head"><div class="sec-no">②</div><h2>お金を払ってでも解決したい悩み</h2><p>第1回144件＋今回56件。口コミサイトの偏りを補正して並べ直しました。</p></div>
+  <div class="pains">
+    <article class="pain top"><div class="rk">1</div><div><h4>ひとりで判断し、ミスが自分の責任になるのに、確かめる手段がない</h4><blockquote>誤った処理を正す人がおらず、後で顧問税理士に指摘されて遡って修正した（元ひとり経理。<a href="https://note.com/straying550/n/ncd129f7f71ef" target="_blank" rel="noopener">note</a> ※要約）／53歳の経理がAIで試算表と仕訳帳を確認し、税率の選択ミスを見つけた（<a href="https://note.com/keiri_ai_neko/n/naa98cd5d54fd" target="_blank" rel="noopener">note</a> ※要約）</blockquote></div><div class="sell"><div><b>売れる形：</b>AIダブルチェックの手順、月次チェック表、確認の型を毎月更新するメンバーシップ、仲間</div><div class="no"><b>売らない：</b>「この処理で合っているか」の個別判断</div></div></article>
+    <article class="pain top"><div class="rk">2</div><div><h4>自分が休んでも、辞めても回る型がない（引き継ぎ・マニュアル）</h4><blockquote>引き継ぎで聞いていなかった給与計算方法が後から判明し、辞めた担当者にLINEで確認。その後、仕訳一覧・マニュアル・メールをNotebookLMに入れて参照させる運用にした（<a href="https://note.com/sabori_keiri/n/n389ed3d0797a" target="_blank" rel="noopener">note</a> ※要約）</blockquote><p class="note" style="margin:6px 0 0">新しく2位に。件数（11件）ではなく、声の中身からの推論です。</p></div><div class="sell"><div><b>売れる形：</b>引き継ぎ書・業務マニュアルの型と、AIに読ませて質問できる形にする手順</div><div class="no"><b>売らない：</b>勤務先の実際のマニュアル</div></div></article>
+    <article class="pain"><div class="rk">3</div><div><h4>社内ルールの範囲でAIをどう使うか、どのAIがどこで間違えるか</h4><blockquote>「どのＡＩにきいたら一番精度が高い回答がきますか？」（<a href="https://detail.chiebukuro.yahoo.co.jp/qa/question_detail/q14320972139" target="_blank" rel="noopener">知恵袋</a>）／有料プランでも源泉徴収の要否で明らかな誤り（同じ質問への回答）</blockquote></div><div class="sell"><div><b>売れる形：</b>架空の問題でのAI比較検証、入れてよいデータの線引き、社内AIルールの雛形（確認前提）</div><div class="no"><b>売らない：</b>特定の会社のルールの最終判断</div></div></article>
+    <article class="pain"><div class="rk">4</div><div><h4>期限のある制度作業を間違えずに終える</h4><blockquote>「経理です。全経理担当へこの動画をオススメしたい…毎年この年末調整動画を何回も繰り返し見てます」いいね16（<a href="https://www.youtube.com/watch?v=FYJjrnPthoE&amp;lc=UgxSCpgKp3N920HZOWl4AaABAg" target="_blank" rel="noopener">コメント</a>）</blockquote></div><div class="sell"><div><b>売れる形：</b>時期ごとのチェック表、一般的な制度解説、AIでの事前チェック手順</div><div class="no"><b>売らない：</b>個別の税額・判定</div></div></article>
+    <article class="pain"><div class="rk">5</div><div><h4>AIで経理はなくなるのか（キャリア不安）</h4><blockquote>「経理2年生だけどこの仕事続けるべきか悩んでる」（<a href="https://www.youtube.com/watch?v=BTvIoxjq8OQ&amp;lc=UgwfflYO5MThxlCm0h54AaABAg" target="_blank" rel="noopener">コメント</a>）</blockquote></div><div class="sell"><div><b>売れる形：</b>無料の入口（動画）、メンバーシップ内の学習計画</div><div class="no"><b>売らない：</b>転職の手順・求人紹介</div></div></article>
+  </div>
+  <p style="margin-top:16px"><b>払い方は「本＝自分」「研修＝会社」に分かれています。</b>経理本人が払ったと書いているのは主に本でした。YouTubeのコメントでは、資料そのものより「資料にたどり着ける場所」（コミュニティ・メンバーシップ）にお金が払われていました。そこで、商品は<b>会社の研修費で落とせる形</b>（法人名の領収書・請求書、研修内容がわかる表示）にしておきます。<span class="tag inf">推論</span></p>
+</section>
+
+<section id="concept">
+  <div class="sec-head"><div class="sec-no">③</div><h2>コンセプトと提供価値</h2><p>第1回の「AIをもう1人の確認役に」を残し、看板と「休める型」を足しました。</p></div>
+  <div class="concept">
+    <p class="big">「ひとりでも、AIをもう1人の確認役にできる。小さな会社の経理」</p>
+    <p><b>約束：</b>毎月の作業を「AIに任せる／人が確かめる／AIに入れない」の3つに分けて、ひとりでも確かめられる形にする。自分が休んでも回る型を、AIで引ける形にして残す。「合っている」と保証するのではなく、「ここまで確かめた」と言える状態をつくります。</p>
+    <div class="vals">
+      <div><h4>① 確かめる手段</h4><p>AIダブルチェックの手順、どのAIがどこで間違えるかの比較、月次の確認表</p></div>
+      <div><h4>② 休める型</h4><p>引き継ぎ書・業務マニュアルの型と、NotebookLMなどで社内資料を引ける形にする手順</p></div>
+      <div><h4>③ 社内で通る線引き</h4><p>入れてよい・いけないデータ、上司に出せる社内AIルールの雛形</p></div>
+      <div><h4>④ ひとりじゃない</h4><p>同じ立場の経理担当が集まるメンバーシップと少人数ライブ（質問は一般論で答える）</p></div>
+    </div>
+    <p class="note" style="margin-top:16px"><b>名乗り方：</b>「新卒で市役所に4年（税務）、会計事務所を経て、今は経理の会社に勤める」。「元税務職員」「税務署目線」は使いません。「現役経理」は職種の確認後です。<b>言わないこと：</b>「○時間削減」「必ず」「絶対」、個別の税額・判定、勤務先の事例。</p>
+  </div>
+</section>
+
+<section id="sheet">
+  <div class="sec-head"><div class="sec-no">④</div><h2>毎回のスプレッドシート配布</h2><p>タクマさんの案は「やる」。位置づけは売上ではなく、LINE登録の入口です。</p></div>
+  <div class="charts2">
+    <div class="chart">
+      <h4>配っても再生は伸びない</h4>
+      <p class="note" style="margin:0">関連589チャンネルの最近30本（15,281本）、伸び率の中央値</p>
+      <div class="bars">
+        <div class="bar"><div class="lbl">概要欄で配布あり（2,129本）</div><div class="track"><div class="fill" style="width:51%"></div></div><div class="val">1.02倍</div></div>
+        <div class="bar lo"><div class="lbl">配布なし（13,152本）</div><div class="track"><div class="fill" style="width:50%"></div></div><div class="val">1.00倍</div></div>
+      </div>
+    </div>
+    <div class="chart">
+      <h4>タイトルに「テンプレ」と入れると弱い</h4>
+      <p class="note" style="margin:0">関連1,390本、再生数の中央値</p>
+      <div class="bars">
+        <div class="bar"><div class="lbl">タイトルに「配布・テンプレ」なし</div><div class="track"><div class="fill" style="width:100%"></div></div><div class="val">1,546回</div></div>
+        <div class="bar lo"><div class="lbl">あり（98本）</div><div class="track"><div class="fill" style="width:37.1%"></div></div><div class="val">574回</div></div>
+      </div>
+    </div>
+  </div>
+  <p>それでも大手のAI・Excel系（ユースフル、ひかりのAI大学など）は、最近30本の7〜10割で特典かLINE登録を概要欄に入れています。配布の目的は再生ではなく登録です。<b>経理×AIの小さいチャンネルは配布もLINEもほぼ使っていない</b>ので、ここに「動画ごとの配布＋LINE」を持ち込むのは、まだ誰もやっていない導線です（効果は未検証）。</p>
+
+  <div class="sheet">
+    <div class="cap">毎回配るシートの共通の型（見本・架空の会社「（例）株式会社サンプル商事」）</div>
+    <div class="tbl" style="margin:0;border:0;border-radius:0"><table>
+      <thead><tr><th>作業</th><th class="c1">AIに任せる</th><th class="c2">人が確かめる</th><th class="c3">AIに入れない</th></tr></thead>
+      <tbody>
+        <tr><td>月次の試算表チェック</td><td>前月比で大きく動いた科目の洗い出し</td><td>動いた理由が取引で説明できるか</td><td>取引先名・個人名</td></tr>
+        <tr><td>請求書の確認</td><td>登録番号・税率欄の抜けの指摘</td><td>適用税率と控除の扱い</td><td>口座番号</td></tr>
+        <tr><td>引き継ぎ書</td><td>手順書の下書き、質問への回答</td><td>例外処理と判断の理由</td><td>マイナンバー・給与の個人データ</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="rules">
+    <div><h4>評価の物差し</h4><p>再生数ではなく<b>動画ごとのLINE登録率</b>。登録経路のURLを動画ごとに分ける。</p></div>
+    <div><h4>タイトル</h4><p>「テンプレ」「配布」は入れない。中身（作業名・ツール名・対象）で引きつけ、概要欄と本編の最後で渡す。</p></div>
+    <div><h4>形式</h4><p>Excel版とGoogleスプレッドシート版。マクロなし。データはすべて架空の会社。</p></div>
+    <div><h4>差別化</h4><p>引き継ぎ書などは「AIに読ませて質問できる形」（NotebookLM用の手順つき）にする。テンプレ単体は無料で配られている分野。</p></div>
+    <div><h4>渡し方</h4><p>3列シートの見本は動画内で全部見せてから、LINEで渡す。LINE誘導への反発（いいね56）に配慮。</p></div>
+    <div><h4>作る手間と注意書き</h4><p>1本2時間以内を目安に型から作り回す。全シートに「一般的な例です。個別の判断は顧問税理士・社内の担当者へ」。</p></div>
+  </div>
+</section>
+
+<section id="content">
+  <div class="sec-head"><div class="sec-no">⑤</div><h2>コンテンツ計画</h2><p>YouTubeを軸にしつつ、経理本人の声が多いnote・Xで会社経理を拾います。</p></div>
+  <div class="tbl"><table>
+    <thead><tr><th>媒体</th><th>役割</th><th>頻度</th><th>中身</th></tr></thead>
+    <tbody>
+      <tr><td><b>YouTube長尺</b>（新チャンネル）</td><td>信頼と検索の資産、季節の山で集める</td><td class="nowrap">週1〜2本</td><td>架空の会社での実演。毎回3列シートを配る</td></tr>
+      <tr><td><b>ショート</b></td><td>見つけてもらう入口</td><td class="nowrap">長尺1本に3〜5本</td><td>「AIが間違えた経理の質問1つ」「AIに入れない経理データ3つ」</td></tr>
+      <tr><td><b>note</b></td><td>会社経理と検索で出会う、有料の受け皿</td><td class="nowrap">無料記事 週1本</td><td>動画の手順を文章で。経理本人のAIの声が集まる場所</td></tr>
+      <tr><td><b>X</b></td><td>経理担当とつながる、需要を確かめる</td><td class="nowrap">毎日1〜3投稿</td><td>制度の日付、AIの間違い例、3列シートの1行。固定ポストで「個別の税務判断には答えません」</td></tr>
+      <tr><td><b>LINE</b></td><td>見込み客リスト、登録率を測る</td><td class="nowrap">週1配信</td><td>毎回の配布物、制度の節目の前のお知らせ、販売の案内</td></tr>
+      <tr><td><b>キャリアノート</b></td><td>ゆるくつなぐ</td><td class="nowrap">3〜4か月に1本</td><td>転職活動の前の土台づくりの範囲だけ</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>4本の柱</h3>
+  <div class="pillars">
+    <div class="pillar"><div class="pc">A</div><h4>AIを確認役に</h4><p>AIダブルチェック、AIの比較検証、入れてよいデータ</p><div class="share"><i style="width:40%"></i></div><p class="note">4割・悩み1と3</p></div>
+    <div class="pillar"><div class="pc">B</div><h4>ひとり経理の型</h4><p>引き継ぎ書×AI、月次チェック、休める仕組み</p><div class="share"><i style="width:30%"></i></div><p class="note">3割・悩み1と2</p></div>
+    <div class="pillar"><div class="pc">C</div><h4>制度の時期もの</h4><p>年末調整、インボイス、3月決算、新リース会計基準</p><div class="share"><i style="width:20%"></i></div><p class="note">2割・悩み4</p></div>
+    <div class="pillar"><div class="pc">D</div><h4>社長と経理</h4><p>社長と決めるAIの順番、AI時代の経理キャリア</p><div class="share"><i style="width:10%"></i></div><p class="note">1割・入口③と悩み5</p></div>
+  </div>
+
+  <h3>最初の12本（タイトル案と配るシート）</h3>
+  <p class="note">赤い番号は最初の30日に出す3本。当たりの動画は【】が71%、数字入りが61%で、疑問形は少なめでした（当たり113本の比較で参考程度）。</p>
+  <div class="titles">
+    <div class="title-row first"><span class="n">1</span><span class="t">【年末調整 2026】12月に還付が多くなりやすい理由と、経理が先に確かめる7か所｜小さな会社の経理担当へ<span class="why">配布：年末調整の確認表（3列つき）／11月中に公開。控除額は国税庁の資料で確かめてから</span></span><span class="who tag fact">C・入口②</span></div>
+    <div class="title-row first"><span class="n">2</span><span class="t">【経理×AI】AIに任せる・人が確かめる・AIに入れない｜月次の作業を3つに分ける10選<span class="why">配布：3列シートの基本版／チャンネルの看板</span></span><span class="who tag fact">A</span></div>
+    <div class="title-row first"><span class="n">3</span><span class="t">【AIダブルチェック】試算表と仕訳をAIに確かめさせる手順と、見落としやすい5つの例（架空の会社）<span class="why">配布：ダブルチェック指示文＋確認表</span></span><span class="who tag fact">A</span></div>
+    <div class="title-row"><span class="n">5</span><span class="t">【ひとり経理】引き継ぎ書がない会社で最初にやる5つ｜社内資料をNotebookLMで引ける形にする<span class="why">配布：引き継ぎ書の型（AIに読ませる版）</span></span><span class="who tag fact">B</span></div>
+    <div class="title-row"><span class="n">4</span><span class="t">【経理の質問7問で検証】ChatGPT・Claude・Gemini・Copilot、どこで間違えるかを比べた結果<span class="why">配布：比較表（架空の問題）／12月</span></span><span class="who tag fact">A</span></div>
+    <div class="title-row"><span class="n">6</span><span class="t">【社内ルール】経理がAIを使う前に決める5つ｜入れてはいけない情報と上司への伝え方<span class="why">配布：社内AIルールの雛形（確認前提と明記）</span></span><span class="who tag fact">A</span></div>
+    <div class="title-row"><span class="n">7</span><span class="t">【インボイス 2026年10月】控除80%→70%で経理が見直す5か所と、取引先から来る質問<span class="why">配布：取引先チェック表／12月</span></span><span class="who tag fact">C</span></div>
+    <div class="title-row"><span class="n">8</span><span class="t">【月次チェック】ひとり経理が締めの前に見る12項目と、AIに先に見せる所<span class="why">配布：月次チェック表／「日次・週次・月次」タスク表の当たり（86.0倍）</span></span><span class="who tag fact">B</span></div>
+    <div class="title-row"><span class="n">9</span><span class="t">【小さな会社】社長と経理担当で決める「AIに任せる順番」3ステップ<span class="why">配布：業務棚卸しシート</span></span><span class="who tag fact">D・入口③</span></div>
+    <div class="title-row"><span class="n">10</span><span class="t">【AI時代の経理】なくなる作業・残る仕事・伸ばす力5選｜経理2〜3年目へ<span class="why">配布：自分の業務の仕分けシート</span></span><span class="who tag fact">D</span></div>
+    <div class="title-row"><span class="n">11</span><span class="t">【副業の確定申告 2027】会社員がAIと会計ソフトで「確かめながら」進める手順（一般的な流れ）<span class="why">配布：提出前の確認表（一般論）／1月。個別の相談には答えない</span></span><span class="who tag fact">入口④</span></div>
+    <div class="title-row"><span class="n">12</span><span class="t">【新リース会計基準 2027】契約書の洗い出しをAIで下書きし、人が確かめる手順<span class="why">配布：契約一覧の型／3月までに</span></span><span class="who tag fact">C</span></div>
+  </div>
+</section>
+
+<section id="money">
+  <div class="sec-head"><div class="sec-no">⑥</div><h2>収益戦略：月30万円は「登録率」しだい</h2><p>テンプレート売上は0円で計算。手数料とLINEの月額費用を差し引いた手取りです。</p></div>
+
+  <h3>商品の階段（すべて就業規則を確認した後に販売）</h3>
+  <div class="ladder">
+    <div class="step"><div class="lv">無料</div><div class="what"><b>YouTube・ショート・note無料記事・X・LINE特典（毎回の3列シート）</b></div><div class="price">0円</div><div class="inplan"><span class="tag fact">入口</span></div></div>
+    <div class="step out"><div class="lv">試験</div><div class="what"><b>仕組みキット（シート＋AIへの指示文＋確認手順の動画）</b><p>有料で売れる根拠がないので、試すだけ</p></div><div class="price">980〜2,980円</div><div class="inplan"><span class="tag inf">計画外</span></div></div>
+    <div class="step"><div class="lv">中①</div><div class="what"><b>noteメンバーシップ「小さな会社の経理 確認室」</b><p>毎月の確認手順、制度の節目のまとめ、一般論での質問回答、月1回の少人数ライブ</p></div><div class="price">月1,480円<br><small>手取り1,265円</small></div><div class="inplan"><span class="tag fact">計画に入れる</span></div></div>
+    <div class="step"><div class="lv">中②</div><div class="what"><b>講座「AIを確認役にする経理の基本」</b><p>動画8〜10本＋ワーク＋型一式。法人名の領収書に対応。四半期に1回販売</p></div><div class="price">29,800円<br><small>手取り28,727円</small></div><div class="inplan"><span class="tag fact">計画に入れる</span></div></div>
+    <div class="step"><div class="lv">中③</div><div class="what"><b>少人数ワークショップ（3〜6人）</b><p>その場で3列シートや引き継ぎ書を作る</p></div><div class="price">9,800円</div><div class="inplan"><span class="tag fact">計画に入れる</span></div></div>
+    <div class="step"><div class="lv">高</div><div class="what"><b>1対1の整理セッション（60分）</b><p>業務の棚卸し、AIに任せる順番、学ぶ計画。税務判断はしない</p></div><div class="price">15,000円</div><div class="inplan"><span class="tag fact">計画に入れる</span></div></div>
+    <div class="step out"><div class="lv">法人</div><div class="what"><b>少人数の法人研修</b><p>就業規則と競業の確認後に検討。保守のまま6か月を過ぎたときの一番効く打ち手</p></div><div class="price">個別見積もり</div><div class="inplan"><span class="tag inf">計画外</span></div></div>
+  </div>
+
+  <h3>3つのシナリオ（12か月目の1か月あたり）</h3>
+  <div class="chart" aria-label="シナリオ別の12か月目の月収">
+    <h4>12か月目の月収（平均・手数料とLINE費用を引いた後）</h4>
+    <p class="note" style="margin:0">赤い線が30万円。表の値は1か月目から表の再生数が出る前提で、立ち上がりを入れると基本は約22万円</p>
+    <div class="bars">
+      <div class="bar lo"><div class="lbl">保守：700回×8本・登録1%</div><div class="track"><div class="fill" style="width:6.3%"></div><div class="goalv" style="left:42.9%"></div></div><div class="val">約4.4万円</div></div>
+      <div class="bar hi"><div class="lbl">基本：3,000回×8本・登録1%</div><div class="track"><div class="fill" style="width:35%"></div><div class="goalv" style="left:42.9%"></div></div><div class="val">約24.5万円</div></div>
+      <div class="bar"><div class="lbl">基本の講座販売月</div><div class="track"><div class="fill" style="width:61.5%"></div><div class="goalv" style="left:42.9%"></div></div><div class="val">約43.1万円</div></div>
+      <div class="bar"><div class="lbl">上振れ：5,000回×8本・登録2%</div><div class="track"><div class="fill" style="width:88.6%"></div><div class="goalv" style="left:42.9%"></div></div><div class="val">約62万円</div></div>
+    </div>
+  </div>
+  <div class="scen">
+    <div class="sc cons"><h4>保守</h4><p>会社経理の長尺中央値のまま。LINE新規 月56人、会員13人</p><div class="big num">約4.4万円</div><p>登録率0.3%なら約2万円</p><p class="when">2年以内には届かない</p></div>
+    <div class="sc base"><h4>基本</h4><p>中央値の約4倍。X・noteから月50人。LINE新規 月290人、会員69人</p><div class="big num">約22〜24.5万円</div><p>講座の販売月は約43万円（9〜12か月目から）</p><p class="when">平均30万円は19か月目前後</p></div>
+    <div class="sc"><h4>上振れ</h4><p>当たり（1万回超）が毎月1本。LINE新規 月900人、会員213人</p><div class="big num">約62万円</div><p>講座は楽観寄り</p><p class="when">30万円超は6〜9か月目</p></div>
+  </div>
+  <details>
+    <summary>計算の確認（基本シナリオ）と前提</summary>
+    <div>
+      <div class="calc">LINE新規   ＝ 24,000回 × 1% ＋ X・note 50人 ＝ 290人／月
+会員新規   ＝ 290 × 3% ＝ 8.7人／月
+12か月目会員 ＝ 8.7 × (1−0.92^12) ÷ 0.08 ＝ 8.7 × 7.9 ＝ 68.8人 → ×1,265円 ＝ 87,313円
+有効リスト ＝ 290 × 12 × 0.7 ＝ 2,436人 → 講座 ×0.4% ＝ 9.7人／四半期
+講座       ＝ 9.7 × 28,727円 ＝ 278,654円（販売月）→ 月平均 92,885円
+1対1 3件   ＝ 43,380円　　ワークショップ 4人 ＝ 37,789円　　LINE費用 −16,500円
+月平均     ＝ 87,313 ＋ 92,885 ＋ 43,380 ＋ 37,789 − 16,500 ＝ 244,867円
+販売月     ＝ 87,313 ＋ 278,654 ＋ 43,380 ＋ 37,789 − 16,500 ＝ 430,636円</div>
+      <ul>
+        <li><b>出典あり：</b>noteの手取り85.5%、Stripe手数料3.6%、LINE公式（ライト月5,000円・スタンダード月15,000円、税別）、視聴→登録0.3〜2%、申込→参加30〜50%、参加→購入5〜20%、解約5〜16%（多くは海外・ベンダーの数字で ※要約）。</li>
+        <li><b>仮定：</b>LINE新規→会員3%、リスト→ウェビナー申込10%、ブロック3割、X・noteからの登録、1対1とワークショップの件数。</li>
+        <li><b>逆算：</b>会員中心で12か月目に30万円なら会員約216人。必要な長尺の月再生は中央の前提で約9.1万回（悪い前提で約63万回、良い前提で約2.4万回）。</li>
+      </ul>
+    </div>
+  </details>
+  <p style="margin-top:14px"><b>この計算から言えること：</b>会社経理向けの動画が中央値のままでは届きません。届くかは「平均再生を中央値の約4倍に上げる」「登録率を1〜2%に乗せる」の2つで決まり、最も効くのは登録率です（0.3%と2%で必要な再生数が約7倍違う）。だから動画ごとに<b>LINE登録数÷長尺再生数</b>を毎週記録します。</p>
+
+  <h3>ロードマップとKPI</h3>
+  <div class="road">
+    <div class="phase"><div class="when">0〜30日（11/5〜12/4）</div><h4>売ってよい範囲を確定し、測れる状態にする</h4><div class="cols">
+      <ul><li>就業規則と勤務先の事業内容の確認</li><li>長尺3本・ショート10本（年末調整・3列・ダブルチェック）</li><li>LINE開設、動画ごとの登録経路と立場の1問</li><li>ヒアリング5人</li></ul>
+      <div class="kpi"><b>KPI（目標）</b>長尺3本／LINE計測が動いている／ヒアリング5人／確認完了<div class="gate">分かれ目：就業規則の結果で、有料商品の時期と一人社長の扱いを決める</div></div>
+    </div></div>
+    <div class="phase"><div class="when">31〜90日（〜2027年2月初め）</div><h4>登録率を測る</h4><div class="cols">
+      <ul><li>長尺を計8〜12本（インボイス・比較検証・引き継ぎ書）</li><li>note無料記事 週1本、X毎日</li><li>（確認後）仕組みキットを1点試す</li><li>ヒアリングを計10人に</li></ul>
+      <div class="kpi"><b>KPI（目標）</b>長尺の再生中央値1,500回以上／<b>登録率1%以上</b>／LINE累計300人（うち会社の経理3割以上）／支払意思の価格帯を決める<div class="gate">90日判定：1%以上→継続。0.3〜1%→特典と渡し方を直す。0.3%未満→note・Xの比重を上げる</div></div>
+    </div></div>
+    <div class="phase"><div class="when">3〜6か月（2027年2〜5月）</div><h4>中価格の商品を立ち上げる</h4><div class="cols">
+      <ul><li>メンバーシップを創設価格で開始</li><li>ワークショップのβ版、講座の先行販売（少人数）</li><li>副業会社員の確定申告、3月決算、新年度の引き継ぎ</li></ul>
+      <div class="kpi"><b>KPI（目標）</b>LINE累計800〜1,200人／会員30人／講座β 5〜10人／月収5〜10万円<div class="gate">6か月判定：保守・基本・上振れのどれに近いか決め、保守なら（確認済みで）法人研修を前に出す</div></div>
+    </div></div>
+    <div class="phase"><div class="when">6〜12か月（2027年5〜11月）</div><h4>講座を正式に回す</h4><div class="cols">
+      <ul><li>講座を四半期ごとに販売</li><li>会員1,980円の新価格を試す</li><li>2027年の年末調整の準備（10月〜）</li></ul>
+      <div class="kpi"><b>KPI（目標）</b>LINE累計2,500〜3,500人／会員55〜70人／講座1回10人／<b>販売月に30万円超</b>、平均20万円台<div class="gate">平均が月15万円未満なら講座の内容と価格を見直す</div></div>
+    </div></div>
+    <div class="phase"><div class="when">12〜24か月</div><h4>販売のない月も30万円へ</h4><div class="cols">
+      <ul><li>会員を定常100人以上へ</li><li>講座の改訂</li><li>規定が許せば法人研修か社長向けワークショップ</li></ul>
+      <div class="kpi"><b>KPI（目標）</b>会員100〜110人／販売のない月も平均30万円</div>
+    </div></div>
+  </div>
+</section>
+
+<section id="legal">
+  <div class="sec-head"><div class="sec-no">⑦</div><h2>法的ガードレール</h2><p>商品と発信に最初から組み込みます。</p></div>
+  <div class="guards">
+    <div><h4>税理士法52条</h4><p>どの場でも、相手の実際の数字や状況に当てはめた回答はしない。「一般にはこう処理される例が多い。個別は顧問税理士へ」の形で答える。演習は架空の会社だけ。紹介料は前提にしない。</p></div>
+    <div><h4>副業・競業</h4><p>就業規則を最初に確認し、必要なら申請。勤務先の顧客・社名・資料・業務フローは使わない。記帳代行・経理代行・社長向けの顧問的な支援は売らない。</p></div>
+    <div><h4>地方公務員法34条</h4><p>市役所時代の事例・納税者の情報・内部の運用は話さない。「元市役所の税務担当」と書き、話すのは公開されている制度の一般論だけ。</p></div>
+    <div><h4>特定商取引法</h4><p>「請求があれば遅滞なく開示」で住所・電話は省略できる（開示できる体制が条件）。Stripeで売る講座は表記ページと最終確認画面を自分で作る。開示で勤務先に知られる可能性はゼロではない。</p></div>
+    <div><h4>景品表示法・ステマ</h4><p>「○時間削減」「必ず」「誰でも」は書かない。「創設メンバー価格」はいつまで・いくらからいくらにを書き、実際に値上げする。アフィリエイトには「PR」。</p></div>
+    <div><h4>個人情報・ツール情報</h4><p>受講者の給与・取引先・マイナンバーは受け取らない。AI Coworkは「2026年11月時点で士業向けの先行提供」と説明し、使える前提の実演はしない。</p></div>
+  </div>
+</section>
+
+<section id="first30">
+  <div class="sec-head"><div class="sec-no">⑧</div><h2>最初の30日（2026年11月5日〜12月4日）</h2><p>目的は売上ではなく、売ってよい範囲の確定・年末調整の1本・登録率の計測・支払意思のヒアリング。</p></div>
+  <div class="weeks">
+    <div class="week"><div class="wn">1週目 11/5〜11/11</div><ul><li>就業規則の副業条項と競業の定義を読む</li><li>勤務先の事業（記帳代行・BPOなど、顧客の種類）を整理</li><li>キャリアノートの副業の届出が経理の発信にも及ぶか確かめ、必要なら動画1の前に申請</li><li>職種・資格を整理し、プロフィールとチャンネル名を決める</li><li>3列シートの型を作り、動画1の台本（控除額は国税庁で確認）</li></ul><div class="done">売ってよい範囲のメモ・チャンネル名・シートの型・台本</div></div>
+    <div class="week"><div class="wn">2週目 11/12〜11/18</div><ul><li>動画1（年末調整）とショート3〜5本を公開</li><li>LINE公式を開設（最初は無料プラン）</li><li>動画ごとに登録経路を分け、立場を1問だけ聞く</li><li>note・Xを開設し、固定ポストに「個別の税務判断には答えません」</li></ul><div class="done">動画1の公開・LINEの計測が動いている</div></div>
+    <div class="week"><div class="wn">3週目 11/19〜11/25</div><ul><li>動画2（3列で分ける10選）を公開</li><li>会社の経理担当5人にヒアリングを申し込む（勤務先の顧客は除く）</li><li>質問：誰にも確かめられずに決めた処理は？休んだら止まる仕事は？会社のAIルールは？月いくらなら自分で、会社の研修費なら？</li><li>note無料記事を2本</li></ul><div class="done">動画2の公開・ヒアリング5件の予定</div></div>
+    <div class="week"><div class="wn">4週目 11/26〜12/4</div><ul><li>動画3（AIダブルチェック）を公開、動画5の台本</li><li>ヒアリングを実施し、悩みのランキングと比べる</li><li>動画ごとの登録率と、ショート・note・X経由の登録を集計</li><li>就業規則の結果で、一人社長の扱いと有料商品の時期を決める</li></ul><div class="done">30日のふり返り</div></div>
+  </div>
+  <div class="dont"><b>30日の時点ではまだやらないこと：</b>有料商品の販売（就業規則の確認前）、社長向けの有料相談、個人事業主の申告への個別対応、勤務先の資料を使った教材づくり、AI Coworkが一般に使える前提の実演。</div>
+</section>
+
+<section id="open">
+  <div class="sec-head"><div class="sec-no">注</div><h2>要確認事項とリサーチの限界</h2><p>数字を外に出す前に読んでください。</p></div>
+  <div class="checks">
+    <div><h4>タクマさんに確認すること <span class="stamp">最優先</span></h4><ol>
+      <li>就業規則の副業条項と競業避止の範囲</li>
+      <li>勤務先の事業内容（記帳代行・BPO・SaaS・研修の有無、顧客の種類）</li>
+      <li>今の職種（経理の実務を担当しているか）</li>
+      <li>簿記などの資格の有無</li>
+      <li>実演に使える会計ソフト・AIの個人アカウント</li>
+      <li>新チャンネルの名前、キャリアノートとの並行の本数</li>
+    </ol></div>
+    <div><h4>一次資料で確かめること <span class="stamp">要確認</span></h4><ol>
+      <li>国税庁「令和8年分 年末調整のしかた」の控除額</li>
+      <li>マネーフォワード AI Coworkの一般提供と料金</li>
+      <li>LINE公式の2026年10月改定後の追加メッセージ料金</li>
+      <li>消費者庁の特商法ガイド</li>
+      <li>税理士への紹介料の可否</li>
+      <li>Stripeの公式料金</li>
+    </ol></div>
+    <div><h4>実測で確かめること</h4><ol>
+      <li>動画ごとの視聴→LINE登録率</li>
+      <li>登録者の立場の内訳（会社の経理の割合）</li>
+      <li>LINE新規→メンバーシップ加入率</li>
+      <li>リスト→ウェビナー申込率、ブロック率</li>
+      <li>ショート・note・X経由の登録数</li>
+    </ol></div>
+  </div>
+  <details>
+    <summary>リサーチの限界</summary>
+    <div><ul>
+      <li><b>ネットワークの制限：</b>note.com、知恵袋、PR TIMES、国税庁、e-Gov、消費者庁、厚労省の一部、Udemy、bizocean、5ch、LINEヤフーの料金ページなどの本文を開けませんでした。悩みの声（計200件）はすべて検索結果のタイトルか抜粋、法令の確認も要約か抜粋です。開けるようにするには、環境のネットワーク設定でこれらのドメインを許可してください。</li>
+      <li><b>YouTubeの対象層はタイトルで分類：</b>視聴者の実際の属性ではありません。取得日が年末調整の季節の真っ最中でした。検索ボリュームは取れていません。</li>
+      <li><b>コメントの偏り：</b>関連度順の上位100件まで、61本・2,054件。自分の立場を名乗ったコメントは少数（会社の経理・事務8件、個人事業主・副業19件など）。</li>
+      <li><b>支払意思と転換率：</b>経理本人の「講座やテンプレートを買った」という声はほとんどなく、転換率は海外ブログやベンダーの数字です。会員加入率・申込率・ブロック率は仮定です。</li>
+      <li><b>採点と推論：</b>ターゲットの採点は重み付けなしの推論。「払う力」と「人数」を重く見ると、一人社長と個人事業主の点は上がります。</li>
+    </ul></div>
+  </details>
+  <details>
+    <summary>チェック担当が直した主な点（21か所）</summary>
+    <div><ul>
+      <li><b>ターゲットの採点：</b>調査メモの足し算の誤りを修正（一人社長23・個人事業主22 → 19・20）。「勤務先が記帳代行をしていなければ一人社長は会社経理と並ぶ」は削除（その場合でも約23点）。</li>
+      <li><b>逆算の矛盾：</b>テンプレート売上を含んでいた逆算を0円に合わせて再計算（必要な月再生 6.6万→9.1万回）。</li>
+      <li><b>立ち上がりの時期：</b>1か月目から全商品を売る前提を、ロードマップに合わせて再計算（12か月目 約22万円、平均30万円は19か月目前後）。</li>
+      <li><b>入口と出口の弱点：</b>社長データの割れ、年末調整の当たりが従業員向けショート中心であることを明記し、LINEの立場の1問と「3割未満なら絞る」判定を追加。</li>
+      <li><b>話者の訂正：</b>AI禁止・研修費の声は職種不明の会社員、『経理×AI入門』の読者はPMM。</li>
+      <li><b>表現：</b>「これで合っている」→「ここまで確かめた」。年末調整の還付は「多くなりやすい」。守秘義務は肩書きより「内側の知見を売りにしない」に重点。</li>
+      <li><b>手順：</b>キャリアノートの副業届出が経理の発信にも及ぶかの確認を1週目に追加。</li>
+    </ul><p>約70か所の数字・日付・引用を調査メモと照合し、YouTubeの集計は分類済みデータから再計算して一致を確認しました。</p></div>
+  </details>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="closing">変わったのはターゲットの答えより、問いの立て方です。集める相手と売る相手を分け、成否は「登録率」で判断します。</p>
+    <p>まず就業規則を確かめ、11月中に年末調整の1本を出し、3列シートを配りながら登録率を測ってください。90日後のその数字で、次の一手を決められます。</p>
+    <p>出典の全リストと詳しい計算は、同じフォルダの報告書（Markdown版）にあります。第1回の資料は別ページのまま残しています。</p>
+  </div>
+</footer>
